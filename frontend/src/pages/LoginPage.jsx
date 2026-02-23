@@ -10,9 +10,27 @@ export default function LoginPage() {
   const [form, setForm] = useState({ email: '', password: '' })
   const [loading, setLoading] = useState(false)
 
-  const handleSubmit = async (e) => {
+const handleSubmit = async (e) => {
   e.preventDefault()
-  // TODO: connect to Django /api/auth/login/
+  setLoading(true)
+  try {
+    const res = await fetch('/api/auth/login/', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ username: form.email, password: form.password }), // Django uses 'username' by default
+    })
+    const data = await res.json()
+    if (res.ok) {
+      localStorage.setItem('token', data.access)
+      navigate('/dashboard')
+    } else {
+      alert('Login failed: ' + (data.detail || 'Check credentials'))
+    }
+  } catch (err) {
+    console.error(err)
+  } finally {
+    setLoading(false)
+  }
 }
 
   return (
