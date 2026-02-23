@@ -24,7 +24,7 @@
 @layer components {
   /* Cards */
   .card {
-    @apply bg-gray-900 border border-white/[0.07] rounded-2xl transition-all duration-300;
+    @apply bg-surface border border-white/[0.07] rounded-2xl transition-all duration-300;
   }
   .card-hover {
     @apply card hover:border-accent/40 hover:shadow-accent hover:-translate-y-0.5;
@@ -48,7 +48,7 @@
 
   /* Form inputs */
   .input {
-    @apply w-full bg-gray-900 border border-white/[0.07] rounded-xl px-4 py-3
+    @apply w-full bg-surface2 border border-white/[0.07] rounded-xl px-4 py-3
            text-[#e8e8f0] text-sm outline-none transition-all duration-300
            focus:border-accent focus:ring-2 focus:ring-accent/10
            placeholder:text-muted;
@@ -78,7 +78,7 @@
 
   /* Progress bars */
   .progress-track {
-    @apply bg-gray-9002 rounded-full h-1.5 overflow-hidden;
+    @apply bg-surface2 rounded-full h-1.5 overflow-hidden;
   }
 
   /* Badge */
@@ -88,8 +88,8 @@
 
   /* Accordion */
   .accordion-trigger {
-    @apply flex items-center justify-between w-full p-5 bg-gray-900
-           hover:bg-gray-9002 transition-colors duration-200 cursor-pointer;
+    @apply flex items-center justify-between w-full p-5 bg-surface
+           hover:bg-surface2 transition-colors duration-200 cursor-pointer;
   }
 
   /* Drop zone */
@@ -110,7 +110,7 @@
 
   /* Toggle */
   .toggle-track {
-    @apply relative w-11 h-6 bg-gray-9002 border border-white/[0.07] rounded-full
+    @apply relative w-11 h-6 bg-surface2 border border-white/[0.07] rounded-full
            cursor-pointer transition-colors duration-300;
   }
   .toggle-track-on { @apply bg-accent border-accent/60; }
@@ -127,7 +127,7 @@
 
   /* Landing feature card */
   .feature-card {
-    @apply bg-gray-900 border border-white/[0.07] rounded-2xl p-8
+    @apply bg-surface border border-white/[0.07] rounded-2xl p-8
            transition-all duration-300
            hover:border-accent/40 hover:-translate-y-1.5
            hover:shadow-[0_20px_60px_rgba(124,109,250,0.15)];

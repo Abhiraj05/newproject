@@ -1,36 +1,38 @@
-import { useState } from 'react'
 import { motion } from 'framer-motion'
 import { useNavigate } from 'react-router-dom'
 import { useApp } from '../../context/AppContext'
+import { SKILLS_DATA, RECENT_ACTIVITY } from '../../data/mockData'
 import PageHeader from '../../components/layout/PageHeader'
 import Card from '../../components/ui/Card'
 import ProgressBar from '../../components/ui/ProgressBar'
 import Icon from '../../components/ui/Icon'
 import Button from '../../components/ui/Button'
 
+const STATS = [
+  { label: 'Roadmap Progress', value: '68%', delta: '+12% this week', icon: 'map', color: '#7c6dfa' },
+  { label: 'Interview Readiness', value: '74/100', delta: '+8 since last', icon: 'chat', color: '#38e2c7' },
+  { label: 'Resume Score', value: '74/100', delta: 'Updated 2 days ago', icon: 'file', color: '#f97aad' },
+  { label: 'Aptitude Average', value: '82%', delta: 'Top 15%', icon: 'trophy', color: '#fbbf24' },
+]
+
 const QUICK_ACTIONS = [
-  { label: 'Generate Roadmap', to: '/dashboard/roadmap',   color: '#7c6dfa' },
-  { label: 'Mock Interview',   to: '/dashboard/interview', color: '#38e2c7' },
-  { label: 'Upload Resume',    to: '/dashboard/resume',    color: '#f97aad' },
-  { label: 'Aptitude Test',    to: '/dashboard/aptitude',  color: '#fbbf24' },
+  { label: 'Generate Roadmap', to: '/dashboard/roadmap', color: '#7c6dfa' },
+  { label: 'Mock Interview', to: '/dashboard/interview', color: '#38e2c7' },
+  { label: 'Upload Resume', to: '/dashboard/resume', color: '#f97aad' },
+  { label: 'Aptitude Test', to: '/dashboard/aptitude', color: '#fbbf24' },
 ]
 
 const container = { hidden: {}, show: { transition: { staggerChildren: 0.08 } } }
-const item      = { hidden: { opacity: 0, y: 20 }, show: { opacity: 1, y: 0, transition: { duration: 0.5 } } }
+const item = { hidden: { opacity: 0, y: 20 }, show: { opacity: 1, y: 0, transition: { duration: 0.5 } } }
 
 export default function OverviewPage() {
   const { user } = useApp()
   const navigate = useNavigate()
 
-  const [stats, setStats]               = useState([])
-  const [skillsData, setSkillsData]     = useState([])
-  const [recentActivity, setRecentActivity] = useState([])
-  // TODO: fetch from Django /api/progress/overview/
-
   return (
     <div>
       <PageHeader
-        title={`Good morning, ${user?.name?.split(' ')[0] ?? 'there'} 👋`}
+        title={`Good morning, ${user?.name?.split(' ')[0] || 'User'} 👋`}
         subtitle="Here's a snapshot of your career readiness today."
       />
 
@@ -41,9 +43,9 @@ export default function OverviewPage() {
         animate="show"
         className="grid grid-cols-2 xl:grid-cols-4 gap-5 mb-6"
       >
-        {stats.map((s) => (
+        {STATS.map((s) => (
           <motion.div key={s.label} variants={item}>
-            <div className="bg-gray-900 border border-white/[0.07] rounded-2xl p-6 hover:border-accent/30 transition-colors duration-300 hover:-translate-y-0.5 transition-transform">
+            <div className="bg-surface border border-white/[0.07] rounded-2xl p-6 hover:border-accent/30 transition-colors duration-300 hover:-translate-y-0.5 transition-transform">
               <div
                 className="w-10 h-10 rounded-xl flex items-center justify-center mb-4 border"
                 style={{ background: `${s.color}18`, borderColor: `${s.color}30`, color: s.color }}
@@ -67,7 +69,7 @@ export default function OverviewPage() {
             <Button variant="ghost" size="sm" onClick={() => navigate('/dashboard/progress')}>View All</Button>
           </div>
           <div className="flex flex-col gap-4">
-            {skillsData.slice(0, 4).map((s) => (
+            {SKILLS_DATA.slice(0, 4).map((s) => (
               <div key={s.name}>
                 <div className="flex justify-between mb-2 text-xs">
                   <span className="font-medium">{s.name}</span>
@@ -83,7 +85,7 @@ export default function OverviewPage() {
         <Card delay={0.3}>
           <h3 className="font-display font-bold text-base mb-5">Recent Activity</h3>
           <div className="flex flex-col divide-y divide-white/[0.05]">
-            {recentActivity.map((a, i) => (
+            {RECENT_ACTIVITY.map((a, i) => (
               <div key={i} className="flex items-start gap-3 py-3.5 first:pt-0 last:pb-0">
                 <div className="w-1.5 h-1.5 rounded-full bg-accent mt-1.5 flex-shrink-0" />
                 <div>

@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
+import { APTITUDE_QUESTIONS } from '../../data/mockData'
 import PageHeader from '../../components/layout/PageHeader'
 import Card from '../../components/ui/Card'
 import Button from '../../components/ui/Button'
@@ -7,37 +8,26 @@ import ProgressBar from '../../components/ui/ProgressBar'
 import ScoreRing from '../../components/ui/ScoreRing'
 
 const CATEGORIES = [
-  { id: 'Quant',   label: 'Quantitative', desc: 'Arithmetic, Percentages, Time & Work', color: '#fbbf24' },
-  { id: 'Logical', label: 'Logical',       desc: 'Patterns, Syllogisms, Sequences',      color: '#7c6dfa' },
-  { id: 'Verbal',  label: 'Verbal',        desc: 'Synonyms, Antonyms, Comprehension',    color: '#38e2c7' },
+  { id: 'Quant', label: 'Quantitative', desc: 'Arithmetic, Percentages, Time & Work', color: '#fbbf24' },
+  { id: 'Logical', label: 'Logical', desc: 'Patterns, Syllogisms, Sequences', color: '#7c6dfa' },
+  { id: 'Verbal', label: 'Verbal', desc: 'Synonyms, Antonyms, Comprehension', color: '#38e2c7' },
 ]
 
 export default function AptitudePage() {
-  const [category, setCategory]   = useState(null)
-  const [started, setStarted]     = useState(false)
-  const [qIdx, setQIdx]           = useState(0)
-  const [selected, setSelected]   = useState(null)
+  const [category, setCategory] = useState(null)
+  const [started, setStarted] = useState(false)
+  const [qIdx, setQIdx] = useState(0)
+  const [selected, setSelected] = useState(null)
   const [submitted, setSubmitted] = useState(false)
-  const [score, setScore]         = useState(0)
-  const [finished, setFinished]   = useState(false)
-  const [questions, setQuestions] = useState([])
-  // TODO: fetch from Django /api/aptitude/questions/?category=Quant
+  const [score, setScore] = useState(0)
+  const [finished, setFinished] = useState(false)
 
+  const questions = category ? APTITUDE_QUESTIONS[category] : []
   const q = questions[qIdx]
 
-  const startTest = async () => {
-    setQIdx(0)
-    setSelected(null)
-    setSubmitted(false)
-    setScore(0)
-    setFinished(false)
-    setStarted(true)
-    // TODO: fetch questions from Django
-    // const res = await fetch(`/api/aptitude/questions/?category=${category}`, {
-    //   headers: { Authorization: `Bearer ${localStorage.getItem('token')}` }
-    // })
-    // const data = await res.json()
-    // setQuestions(data.questions)
+  const startTest = () => {
+    setStarted(true); setQIdx(0); setSelected(null)
+    setSubmitted(false); setScore(0); setFinished(false)
   }
 
   const handleSubmit = () => {
@@ -65,6 +55,7 @@ export default function AptitudePage() {
     return 'q-option opacity-40'
   }
 
+  // ── Category Select Screen ──
   if (!started) return (
     <div>
       <PageHeader title="Aptitude Practice" subtitle="Test and sharpen your reasoning skills across key domains." />
@@ -77,9 +68,8 @@ export default function AptitudePage() {
                 key={c.id}
                 whileHover={{ x: 4 }}
                 onClick={() => setCategory(c.id)}
-                className={`p-4 rounded-xl border cursor-pointer transition-all duration-200 ${
-                  category === c.id ? 'border-current bg-opacity-10' : 'border-white/[0.07] hover:border-white/20'
-                }`}
+                className={`p-4 rounded-xl border cursor-pointer transition-all duration-200 ${category === c.id ? 'border-current bg-opacity-10' : 'border-white/[0.07] hover:border-white/20'
+                  }`}
                 style={category === c.id ? { borderColor: c.color, background: `${c.color}10`, color: c.color } : {}}
               >
                 <p className={`font-display font-semibold text-sm mb-1 ${category === c.id ? '' : 'text-[#e8e8f0]'}`}>{c.label}</p>
@@ -88,22 +78,33 @@ export default function AptitudePage() {
             ))}
           </div>
           <Button onClick={startTest} disabled={!category} className="w-full justify-center">
-            Start Test
+            Start Test — {category ? questions.length : 0} Questions
           </Button>
         </Card>
       </div>
     </div>
   )
 
+  // ── Finished Screen ──
   if (finished) return (
     <div className="flex flex-col items-center justify-center min-h-[60vh]">
-      <motion.div initial={{ opacity: 0, scale: 0.9 }} animate={{ opacity: 1, scale: 1 }} className="text-center">
-        <motion.div initial={{ scale: 0 }} animate={{ scale: 1 }} transition={{ delay: 0.2, type: 'spring', stiffness: 200 }} className="text-5xl mb-8">🎉</motion.div>
-        <ScoreRing score={questions.length > 0 ? Math.round((score / questions.length) * 100) : 0} size={160} label="Final Score" />
+      <motion.div
+        initial={{ opacity: 0, scale: 0.9 }}
+        animate={{ opacity: 1, scale: 1 }}
+        className="text-center"
+      >
+        <motion.div
+          initial={{ scale: 0 }} animate={{ scale: 1 }}
+          transition={{ delay: 0.2, type: 'spring', stiffness: 200 }}
+          className="text-5xl mb-8"
+        >🎉</motion.div>
+        <ScoreRing score={Math.round((score / questions.length) * 100)} size={160} label="Final Score" />
         <h2 className="font-display font-bold text-2xl mt-8 mb-2">
           {score === questions.length ? 'Perfect Score!' : score >= questions.length / 2 ? 'Well Done!' : 'Keep Practicing!'}
         </h2>
-        <p className="text-muted mb-8">You got {score} out of {questions.length} correct in {category} reasoning.</p>
+        <p className="text-muted mb-8">
+          You got {score} out of {questions.length} correct in {category} reasoning.
+        </p>
         <div className="flex items-center justify-center gap-3">
           <Button onClick={startTest}>Try Again</Button>
           <Button variant="ghost" onClick={reset}>Change Category</Button>
@@ -112,8 +113,7 @@ export default function AptitudePage() {
     </div>
   )
 
-  if (!q) return null
-
+  // ── Quiz Screen ──
   return (
     <div>
       <div className="flex items-center justify-between mb-8">
@@ -136,9 +136,10 @@ export default function AptitudePage() {
             transition={{ duration: 0.3 }}
           >
             <Card padding="p-7">
-              <p className="text-base font-medium leading-relaxed mb-7">{q.q}</p>
+              <p className="text-base font-medium leading-relaxed mb-7">{q?.q}</p>
+
               <div className="flex flex-col gap-2.5 mb-7">
-                {q.opts.map((opt, i) => (
+                {q?.opts.map((opt, i) => (
                   <motion.div
                     key={i}
                     whileHover={!submitted ? { x: 4 } : {}}
@@ -150,15 +151,25 @@ export default function AptitudePage() {
                   </motion.div>
                 ))}
               </div>
+
               {submitted ? (
                 <div className="flex items-center gap-3">
-                  <div className={`flex-1 p-3.5 rounded-xl text-sm border ${selected === q.ans ? 'bg-accent2/10 border-accent2/30 text-accent2' : 'bg-accent3/10 border-accent3/30 text-accent3'}`}>
-                    {selected === q.ans ? '✓ Correct! Well done.' : `✗ Incorrect. Correct answer: ${q.opts[q.ans]}`}
+                  <div className={`flex-1 p-3.5 rounded-xl text-sm border ${selected === q.ans
+                      ? 'bg-accent2/10 border-accent2/30 text-accent2'
+                      : 'bg-accent3/10 border-accent3/30 text-accent3'
+                    }`}>
+                    {selected === q.ans
+                      ? '✓ Correct! Well done.'
+                      : `✗ Incorrect. Correct answer: ${q.opts[q.ans]}`}
                   </div>
-                  <Button onClick={handleNext}>{qIdx < questions.length - 1 ? 'Next' : 'View Results'}</Button>
+                  <Button onClick={handleNext}>
+                    {qIdx < questions.length - 1 ? 'Next' : 'View Results'}
+                  </Button>
                 </div>
               ) : (
-                <Button onClick={handleSubmit} disabled={selected === null}>Submit Answer</Button>
+                <Button onClick={handleSubmit} disabled={selected === null}>
+                  Submit Answer
+                </Button>
               )}
             </Card>
           </motion.div>

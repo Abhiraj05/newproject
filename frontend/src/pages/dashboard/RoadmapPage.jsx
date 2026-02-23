@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
+import { ROADMAPS, CAREER_ROLES } from '../../data/mockData'
 import PageHeader from '../../components/layout/PageHeader'
 import Card from '../../components/ui/Card'
 import Button from '../../components/ui/Button'
@@ -8,51 +9,23 @@ import { FormSelect } from '../../components/ui/FormInput'
 import Icon from '../../components/ui/Icon'
 import Loader from '../../components/ui/Loader'
 
-const CAREER_ROLES = [
-  'Frontend Developer',
-  'Backend Developer',
-  'Full Stack Developer',
-  'Data Scientist',
-  'DevOps Engineer',
-  'Product Manager',
-  'UX Designer',
-]
-
 const LEVELS = ['Beginner', 'Intermediate', 'Advanced']
 
 export default function RoadmapPage() {
-  const [career, setCareer]       = useState(CAREER_ROLES[0])
-  const [level, setLevel]         = useState('Intermediate')
-  const [skills, setSkills]       = useState(['JavaScript', 'HTML/CSS'])
-  const [loading, setLoading]     = useState(false)
+  const [career, setCareer] = useState(CAREER_ROLES[0])
+  const [level, setLevel] = useState('Intermediate')
+  const [skills, setSkills] = useState(['JavaScript', 'HTML/CSS'])
+  const [loading, setLoading] = useState(false)
   const [generated, setGenerated] = useState(false)
-  const [open, setOpen]           = useState({})
-  const [done, setDone]           = useState({})
-  const [roadmap, setRoadmap]     = useState([])
-  const [error, setError]         = useState(null)
+  const [open, setOpen] = useState({})
+  const [done, setDone] = useState({})
 
-  const handleGenerate = async () => {
+  const roadmap = ROADMAPS[career] || ROADMAPS['Frontend Developer']
+
+  const handleGenerate = () => {
     setLoading(true)
     setGenerated(false)
-    setError(null)
-    try {
-      const res = await fetch('/api/roadmap/generate/', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          Authorization: `Bearer ${localStorage.getItem('token')}`,
-        },
-        body: JSON.stringify({ career, level, skills }),
-      })
-      const data = await res.json()
-      if (!res.ok) throw new Error(data.message || 'Something went wrong')
-      setRoadmap(data.phases)
-      setGenerated(true)
-    } catch (err) {
-      setError(err.message)
-    } finally {
-      setLoading(false)
-    }
+    setTimeout(() => { setLoading(false); setGenerated(true) }, 1800)
   }
 
   const toggleOpen = (i) => setOpen((o) => ({ ...o, [i]: !o[i] }))
@@ -65,10 +38,11 @@ export default function RoadmapPage() {
         subtitle="Configure your profile and receive a personalized AI-built learning roadmap."
       />
 
+      {/* Config Form */}
       <Card padding="p-7" className="mb-7">
         <div className="grid md:grid-cols-2 gap-5 mb-5">
           <FormSelect label="Target Career Role" value={career} onChange={(e) => setCareer(e.target.value)} options={CAREER_ROLES} />
-          <FormSelect label="Experience Level"   value={level}  onChange={(e) => setLevel(e.target.value)}  options={LEVELS} />
+          <FormSelect label="Experience Level" value={level} onChange={(e) => setLevel(e.target.value)} options={LEVELS} />
         </div>
         <div className="mb-6">
           <label className="text-xs font-medium text-muted uppercase tracking-wider block mb-2">
@@ -76,17 +50,16 @@ export default function RoadmapPage() {
           </label>
           <TagInput tags={skills} setTags={setSkills} placeholder="Add a skill..." />
         </div>
-        {error && (
-          <p className="text-accent3 text-sm mb-4">{error}</p>
-        )}
         <Button onClick={handleGenerate} loading={loading}>
           <Icon name="bolt" size={15} />
           {loading ? 'Generating...' : 'Generate Roadmap'}
         </Button>
       </Card>
 
+      {/* Loading */}
       {loading && <Loader text="Building your personalized roadmap..." />}
 
+      {/* Roadmap Output */}
       <AnimatePresence>
         {generated && !loading && (
           <motion.div
@@ -94,6 +67,7 @@ export default function RoadmapPage() {
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5 }}
           >
+            {/* Title row */}
             <div className="flex items-center gap-3 mb-5">
               <h2 className="font-display font-bold text-xl">{career} Roadmap</h2>
               <span className="bg-accent2/10 border border-accent2/30 text-accent2 text-xs font-semibold rounded-full px-3 py-1">
@@ -106,10 +80,11 @@ export default function RoadmapPage() {
                 const completedCount = phase.modules.filter((_, mi) => done[`${pi}-${mi}`]).length
                 return (
                   <div key={pi} className="border border-white/[0.07] rounded-xl overflow-hidden hover:border-accent/30 transition-colors duration-300">
+                    {/* Phase Header */}
                     <button
                       type="button"
                       onClick={() => toggleOpen(pi)}
-                      className="flex items-center gap-4 w-full px-5 py-4 bg-gray-900 hover:bg-gray-9002 transition-colors text-left"
+                      className="flex items-center gap-4 w-full px-5 py-4 bg-surface hover:bg-surface2 transition-colors text-left"
                     >
                       <span className="w-7 h-7 rounded-lg bg-accent/15 border border-accent/25 flex items-center justify-center text-xs font-bold text-accent font-display flex-shrink-0">
                         {pi + 1}
@@ -123,6 +98,7 @@ export default function RoadmapPage() {
                       </motion.div>
                     </button>
 
+                    {/* Phase Body */}
                     <AnimatePresence>
                       {open[pi] && (
                         <motion.div
@@ -132,7 +108,7 @@ export default function RoadmapPage() {
                           transition={{ duration: 0.3, ease: [0.4, 0, 0.2, 1] }}
                           className="overflow-hidden"
                         >
-                          <div className="bg-gray-9002 border-t border-white/[0.07]">
+                          <div className="bg-surface2 border-t border-white/[0.07]">
                             {phase.modules.map((mod, mi) => {
                               const key = `${pi}-${mi}`
                               const isDone = done[key]

@@ -1,28 +1,21 @@
 import { useEffect, useState } from 'react'
 import { motion } from 'framer-motion'
+import { SKILLS_DATA, APTITUDE_HISTORY, ACTIVITY_LOG } from '../../data/mockData'
 import PageHeader from '../../components/layout/PageHeader'
 import Card from '../../components/ui/Card'
 import ProgressBar from '../../components/ui/ProgressBar'
 import ScoreRing from '../../components/ui/ScoreRing'
 
 const container = { hidden: {}, show: { transition: { staggerChildren: 0.08 } } }
-const item      = { hidden: { opacity: 0, y: 16 }, show: { opacity: 1, y: 0 } }
+const item = { hidden: { opacity: 0, y: 16 }, show: { opacity: 1, y: 0 } }
 
 const statusColor = (s) => (s === 'Completed' || s === 'Done' ? '#38e2c7' : '#fbbf24')
 
 export default function ProgressPage() {
-  const [mounted, setMounted]               = useState(false)
-  const [skillsData, setSkillsData]         = useState([])
-  const [aptitudeHistory, setAptitudeHistory] = useState([])
-  const [activityLog, setActivityLog]       = useState([])
-  // TODO: fetch from Django /api/progress/
+  const [mounted, setMounted] = useState(false)
+  useEffect(() => { const t = setTimeout(() => setMounted(true), 100); return () => clearTimeout(t) }, [])
 
-  useEffect(() => {
-    const t = setTimeout(() => setMounted(true), 100)
-    return () => clearTimeout(t)
-  }, [])
-
-  const maxBar = aptitudeHistory.length > 0 ? Math.max(...aptitudeHistory.map((d) => d.score)) : 1
+  const maxBar = Math.max(...APTITUDE_HISTORY.map((d) => d.score))
 
   return (
     <div>
@@ -34,9 +27,9 @@ export default function ProgressPage() {
         className="grid grid-cols-3 gap-5 mb-6"
       >
         {[
-          { score: 68, label: 'Roadmap Progress',    color: '#7c6dfa' },
+          { score: 68, label: 'Roadmap Progress', color: '#7c6dfa' },
           { score: 74, label: 'Interview Readiness', color: '#38e2c7' },
-          { score: 82, label: 'Aptitude Average',    color: '#f97aad' },
+          { score: 82, label: 'Aptitude Average', color: '#f97aad' },
         ].map((r) => (
           <motion.div key={r.label} variants={item}>
             <Card className="flex items-center justify-center py-8">
@@ -52,7 +45,7 @@ export default function ProgressPage() {
         <Card delay={0.2} padding="p-6">
           <h3 className="font-display font-bold text-base mb-6">Skill Proficiency</h3>
           <div className="flex flex-col gap-5">
-            {skillsData.map((s) => (
+            {SKILLS_DATA.map((s) => (
               <div key={s.name}>
                 <div className="flex justify-between mb-2 text-xs">
                   <span className="font-medium">{s.name}</span>
@@ -68,8 +61,8 @@ export default function ProgressPage() {
         <Card delay={0.3} padding="p-6">
           <h3 className="font-display font-bold text-base mb-6">Aptitude Performance Trend</h3>
           <div className="flex items-end gap-2 h-40">
-            {aptitudeHistory.map((d, i) => {
-              const isLast = i === aptitudeHistory.length - 1
+            {APTITUDE_HISTORY.map((d, i) => {
+              const isLast = i === APTITUDE_HISTORY.length - 1
               return (
                 <div key={d.month} className="flex flex-col items-center gap-1.5 flex-1">
                   <motion.div
@@ -107,7 +100,7 @@ export default function ProgressPage() {
               </tr>
             </thead>
             <tbody>
-              {activityLog.map((row, i) => (
+              {ACTIVITY_LOG.map((row, i) => (
                 <motion.tr
                   key={i}
                   initial={{ opacity: 0 }}
@@ -117,7 +110,7 @@ export default function ProgressPage() {
                 >
                   <td className="py-3.5 px-4 font-medium">{row.activity}</td>
                   <td className="py-3.5 px-4">
-                    <span className="bg-gray-9002 border border-white/[0.07] rounded-md px-2.5 py-1 text-xs">{row.category}</span>
+                    <span className="bg-surface2 border border-white/[0.07] rounded-md px-2.5 py-1 text-xs">{row.category}</span>
                   </td>
                   <td className="py-3.5 px-4 text-muted text-xs">{row.score}</td>
                   <td className="py-3.5 px-4 text-muted text-xs">{row.date}</td>

@@ -9,11 +9,11 @@ import Icon from '../../components/ui/Icon'
 import Loader from '../../components/ui/Loader'
 
 const SECTIONS = [
-  { label: 'Contact & Summary',  score: 90, feedback: 'Excellent. Complete contact info and compelling professional summary.' },
-  { label: 'Work Experience',    score: 72, feedback: 'Add quantifiable metrics to achievements. Use action verbs consistently.' },
-  { label: 'Skills Section',     score: 85, feedback: 'Well-organized. Consider grouping by category (Languages, Frameworks, Tools).' },
-  { label: 'Education',          score: 95, feedback: 'Perfect formatting. GPA and relevant coursework clearly stated.' },
-  { label: 'ATS Compatibility',  score: 62, feedback: 'Avoid tables and graphics. Improve keyword density for target roles.' },
+  { label: 'Contact & Summary', score: 90, feedback: 'Excellent. Complete contact info and compelling professional summary.' },
+  { label: 'Work Experience', score: 72, feedback: 'Add quantifiable metrics to achievements. Use action verbs consistently.' },
+  { label: 'Skills Section', score: 85, feedback: 'Well-organized. Consider grouping by category (Languages, Frameworks, Tools).' },
+  { label: 'Education', score: 95, feedback: 'Perfect formatting. GPA and relevant coursework clearly stated.' },
+  { label: 'ATS Compatibility', score: 62, feedback: 'Avoid tables and graphics. Improve keyword density for target roles.' },
 ]
 
 const TIPS = [
@@ -29,8 +29,8 @@ const scoreColor = (s) => (s >= 80 ? '#38e2c7' : s >= 65 ? '#fbbf24' : '#f97aad'
 
 export default function ResumePage() {
   const [dragging, setDragging] = useState(false)
-  const [file, setFile]         = useState(null)
-  const [loading, setLoading]   = useState(false)
+  const [file, setFile] = useState(null)
+  const [loading, setLoading] = useState(false)
   const [analyzed, setAnalyzed] = useState(false)
 
   const handleDrop = (e) => {
@@ -42,10 +42,9 @@ export default function ResumePage() {
 
   const handleClick = () => setFile({ name: 'resume_alex_2025.pdf', size: '2.1 MB' })
 
-  const handleAnalyze = async () => {
+  const handleAnalyze = () => {
     setLoading(true)
-    // TODO: send file to Django /api/resume/analyze/
-    setLoading(false)
+    setTimeout(() => { setLoading(false); setAnalyzed(true) }, 2000)
   }
 
   return (
@@ -55,6 +54,7 @@ export default function ResumePage() {
         subtitle="Upload your resume for AI-powered ATS scoring and improvement suggestions."
       />
 
+      {/* Upload Zone */}
       <AnimatePresence mode="wait">
         {!file ? (
           <motion.div
@@ -103,7 +103,9 @@ export default function ResumePage() {
             <AnimatePresence>
               {analyzed && !loading && (
                 <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.5 }}>
+                  {/* Score + Sections */}
                   <div className="grid lg:grid-cols-5 gap-5 mb-5">
+                    {/* Score Ring */}
                     <Card className="lg:col-span-2 flex flex-col items-center justify-center gap-5 py-8">
                       <ScoreRing score={74} size={140} label="Overall Score" />
                       <div className="text-center">
@@ -114,6 +116,7 @@ export default function ResumePage() {
                       </div>
                     </Card>
 
+                    {/* Section Analysis */}
                     <Card className="lg:col-span-3" padding="p-6">
                       <h3 className="font-display font-bold text-base mb-5">Section Analysis</h3>
                       <div className="flex flex-col gap-4">
@@ -136,6 +139,7 @@ export default function ResumePage() {
                     </Card>
                   </div>
 
+                  {/* Improvement Tips */}
                   <Card padding="p-6">
                     <h3 className="font-display font-bold text-base mb-5">🎯 Top Improvement Suggestions</h3>
                     <div className="grid md:grid-cols-2 gap-3">
@@ -145,7 +149,7 @@ export default function ResumePage() {
                           initial={{ opacity: 0, y: 10 }}
                           animate={{ opacity: 1, y: 0 }}
                           transition={{ delay: i * 0.06 }}
-                          className="flex gap-3 p-4 bg-gray-9002 border border-white/[0.07] rounded-xl"
+                          className="flex gap-3 p-4 bg-surface2 border border-white/[0.07] rounded-xl"
                         >
                           <span className="text-accent font-bold font-display text-sm flex-shrink-0">{i + 1}.</span>
                           <p className="text-muted text-xs leading-relaxed">{tip}</p>

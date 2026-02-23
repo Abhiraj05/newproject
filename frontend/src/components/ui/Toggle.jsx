@@ -12,9 +12,8 @@ export default function Toggle({ on, onClick, label, description }) {
       <button
         type="button"
         onClick={onClick}
-        className={`relative w-11 h-6 rounded-full border cursor-pointer transition-colors duration-300 flex-shrink-0 ${
-          on ? 'bg-accent border-accent/60' : 'bg-gray-9002 border-white/[0.07]'
-        }`}
+        className={`relative w-11 h-6 rounded-full border cursor-pointer transition-colors duration-300 flex-shrink-0 ${on ? 'bg-accent border-accent/60' : 'bg-surface2 border-white/[0.07]'
+          }`}
       >
         <motion.div
           className="absolute top-0.5 left-0.5 w-5 h-5 bg-white rounded-full shadow-sm"

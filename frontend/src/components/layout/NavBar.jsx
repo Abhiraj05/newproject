@@ -8,7 +8,7 @@ export default function Navbar({ onMenuToggle }) {
   const [search, setSearch] = useState('')
 
   return (
-    <header className="h-16 bg-gray-900 border-b border-white/[0.07] flex items-center px-7 gap-4 justify-between flex-shrink-0">
+    <header className="h-16 bg-surface border-b border-white/[0.07] flex items-center px-7 gap-4 justify-between flex-shrink-0">
       {/* Left */}
       <div className="flex items-center gap-4">
         <button
@@ -19,7 +19,7 @@ export default function Navbar({ onMenuToggle }) {
         </button>
 
         {/* Search */}
-        <div className="flex items-center gap-3 bg-gray-9002 border border-white/[0.07] rounded-xl px-4 py-2.5 w-64 focus-within:border-accent/40 transition-colors duration-300">
+        <div className="flex items-center gap-3 bg-surface2 border border-white/[0.07] rounded-xl px-4 py-2.5 w-64 focus-within:border-accent/40 transition-colors duration-300">
           <Icon name="search" size={14} className="text-muted flex-shrink-0" />
           <input
             value={search}
@@ -45,9 +45,9 @@ export default function Navbar({ onMenuToggle }) {
         {/* Avatar */}
         <motion.div
           whileHover={{ scale: 1.05 }}
-          className="w-9 h-9 rounded-full bg-gradient-to-br from-accent to-accent2 flex items-center justify-center text-xs font-bold cursor-pointer"
+          className="w-9 h-9 rounded-full bg-gradient-to-br from-accent to-accent2 flex items-center justify-center text-xs font-bold cursor-pointer overflow-hidden"
         >
-          <img src={user?.avatar || "/avatar.png"} />
+          {user?.avatar ? <img src={user.avatar} className="w-full h-full object-cover" /> : (user?.name?.charAt(0) || '?')}
         </motion.div>
       </div>
     </header>
