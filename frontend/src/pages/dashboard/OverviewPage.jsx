@@ -43,7 +43,7 @@ export default function OverviewPage() {
       >
         {stats.map((s) => (
           <motion.div key={s.label} variants={item}>
-            <div className="bg-surface border border-white/[0.07] rounded-2xl p-6 hover:border-accent/30 transition-colors duration-300 hover:-translate-y-0.5 transition-transform">
+            <div className="bg-gray-900 border border-white/[0.07] rounded-2xl p-6 hover:border-accent/30 transition-colors duration-300 hover:-translate-y-0.5 transition-transform">
               <div
                 className="w-10 h-10 rounded-xl flex items-center justify-center mb-4 border"
                 style={{ background: `${s.color}18`, borderColor: `${s.color}30`, color: s.color }}

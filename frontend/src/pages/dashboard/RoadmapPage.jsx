@@ -109,7 +109,7 @@ export default function RoadmapPage() {
                     <button
                       type="button"
                       onClick={() => toggleOpen(pi)}
-                      className="flex items-center gap-4 w-full px-5 py-4 bg-surface hover:bg-surface2 transition-colors text-left"
+                      className="flex items-center gap-4 w-full px-5 py-4 bg-gray-900 hover:bg-gray-9002 transition-colors text-left"
                     >
                       <span className="w-7 h-7 rounded-lg bg-accent/15 border border-accent/25 flex items-center justify-center text-xs font-bold text-accent font-display flex-shrink-0">
                         {pi + 1}
@@ -132,7 +132,7 @@ export default function RoadmapPage() {
                           transition={{ duration: 0.3, ease: [0.4, 0, 0.2, 1] }}
                           className="overflow-hidden"
                         >
-                          <div className="bg-surface2 border-t border-white/[0.07]">
+                          <div className="bg-gray-9002 border-t border-white/[0.07]">
                             {phase.modules.map((mod, mi) => {
                               const key = `${pi}-${mi}`
                               const isDone = done[key]

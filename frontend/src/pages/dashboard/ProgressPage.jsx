@@ -117,7 +117,7 @@ export default function ProgressPage() {
                 >
                   <td className="py-3.5 px-4 font-medium">{row.activity}</td>
                   <td className="py-3.5 px-4">
-                    <span className="bg-surface2 border border-white/[0.07] rounded-md px-2.5 py-1 text-xs">{row.category}</span>
+                    <span className="bg-gray-9002 border border-white/[0.07] rounded-md px-2.5 py-1 text-xs">{row.category}</span>
                   </td>
                   <td className="py-3.5 px-4 text-muted text-xs">{row.score}</td>
                   <td className="py-3.5 px-4 text-muted text-xs">{row.date}</td>

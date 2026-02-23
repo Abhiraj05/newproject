@@ -14,7 +14,7 @@ export default function ProgressBar({ pct, color = '#7c6dfa', animated = true, h
   }, [pct, animated])
 
   return (
-    <div className={`bg-surface2 rounded-full ${height} overflow-hidden w-full`}>
+    <div className={`bg-gray-9002 rounded-full ${height} overflow-hidden w-full`}>
       <motion.div
         className="h-full rounded-full"
         style={{ background: color }}

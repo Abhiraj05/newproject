@@ -10,10 +10,11 @@ export default function Button({
   className = '',
   loading = false,
 }) {
+  // Use CSS variables defined in index.css for consistency
   const base =
     variant === 'primary'
-      ? 'bg-gradient-to-r from-accent to-violet-400 text-white font-display font-semibold'
-      : 'bg-transparent text-[#e8e8f0] border border-white/[0.07] font-display font-medium hover:border-accent/60 hover:text-accent hover:bg-accent/5'
+      ? 'bg-gradient-to-r from-indigo-500 to-violet-400 text-white font-semibold shadow-[0_0_20px_rgba(99,102,241,0.3)]'
+      : 'bg-transparent text-[#e8e8f0] border border-white/[0.07] font-medium hover:border-indigo-500/60 hover:text-indigo-400 hover:bg-indigo-500/5'
 
   const sizes = {
     sm: 'px-4 py-2 text-xs rounded-lg',
@@ -33,11 +34,10 @@ export default function Button({
         transition-all duration-300 select-none
         disabled:opacity-50 disabled:cursor-not-allowed
         ${base} ${sizes[size]} ${className}
-        ${variant === 'primary' ? 'shadow-sm hover:shadow-accent-lg' : ''}
       `}
     >
       {loading ? (
-        <span className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin-slow" />
+        <span className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" />
       ) : null}
       {children}
     </motion.button>

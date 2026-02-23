@@ -10,7 +10,7 @@ export function AccordionItem({ title, children, badge, defaultOpen = false }) {
       <button
         type="button"
         onClick={() => setOpen(!open)}
-        className="flex items-center justify-between w-full p-5 bg-surface hover:bg-surface2 transition-colors duration-200 text-left"
+        className="flex items-center justify-between w-full p-5 bg-gray-900 hover:bg-gray-9002 transition-colors duration-200 text-left"
       >
         <div className="flex items-center gap-3">
           {badge && (
@@ -34,7 +34,7 @@ export function AccordionItem({ title, children, badge, defaultOpen = false }) {
             transition={{ duration: 0.3, ease: [0.4, 0, 0.2, 1] }}
             className="overflow-hidden"
           >
-            <div className="bg-surface2 border-t border-white/[0.07] p-5">{children}</div>
+            <div className="bg-gray-9002 border-t border-white/[0.07] p-5">{children}</div>
           </motion.div>
         )}
       </AnimatePresence>

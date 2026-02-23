@@ -36,7 +36,7 @@ export function FormSelect({ label, value, onChange, options, className = '' }) 
       )}
       <select value={value} onChange={onChange} className="input">
         {options.map((opt) => (
-          <option key={opt} value={opt} className="bg-surface2">
+          <option key={opt} value={opt} className="bg-gray-9002">
             {opt}
           </option>
         ))}

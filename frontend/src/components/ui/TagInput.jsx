@@ -17,7 +17,7 @@ export default function TagInput({ tags, setTags, placeholder = 'Add tag and pre
   const removeTag = (idx) => setTags(tags.filter((_, i) => i !== idx))
 
   return (
-    <div className="flex flex-wrap gap-2 items-center min-h-[48px] bg-surface2 border border-white/[0.07] rounded-xl px-3 py-2 focus-within:border-accent/60 focus-within:ring-2 focus-within:ring-accent/10 transition-all duration-300">
+    <div className="flex flex-wrap gap-2 items-center min-h-[48px] bg-gray-9002 border border-white/[0.07] rounded-xl px-3 py-2 focus-within:border-accent/60 focus-within:ring-2 focus-within:ring-accent/10 transition-all duration-300">
       <AnimatePresence>
         {tags.map((tag, i) => (
           <motion.span

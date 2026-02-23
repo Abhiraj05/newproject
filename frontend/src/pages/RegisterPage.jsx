@@ -34,7 +34,7 @@ const handleSubmit = async (e) => {
           <p className="text-muted text-sm">Start your AI-powered career journey today</p>
         </div>
 
-        <div className="bg-surface border border-white/[0.07] rounded-2xl p-8">
+        <div className="bg-gray-900 border border-white/[0.07] rounded-2xl p-8">
           <form onSubmit={handleSubmit} className="flex flex-col gap-5">
             <FormInput label="Full Name"        type="text"     placeholder="Alex Johnson"      value={form.name}     onChange={set('name')}     required />
             <FormInput label="Email Address"    type="email"    placeholder="alex@example.com"  value={form.email}    onChange={set('email')}    required />

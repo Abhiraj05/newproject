@@ -82,15 +82,15 @@ export default function InterviewPage() {
                   initial={{ opacity: 0, y: 12 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ delay: i * 0.07 }}
-                  className="bg-surface border border-white/[0.07] rounded-xl overflow-hidden hover:border-accent/30 transition-colors duration-300"
+                  className="bg-gray-900 border border-white/[0.07] rounded-xl overflow-hidden hover:border-accent/30 transition-colors duration-300"
                 >
                   <button
                     type="button"
                     onClick={() => setActiveQ(activeQ === i ? null : i)}
-                    className="flex items-start gap-3 w-full p-5 text-left hover:bg-surface2 transition-colors"
+                    className="flex items-start gap-3 w-full p-5 text-left hover:bg-gray-9002 transition-colors"
                   >
                     <Badge label={q.level} variant={q.level} />
-                    <span className="text-xs text-muted bg-surface2 border border-white/[0.07] rounded-md px-2 py-1 whitespace-nowrap mt-0.5">{q.category}</span>
+                    <span className="text-xs text-muted bg-gray-9002 border border-white/[0.07] rounded-md px-2 py-1 whitespace-nowrap mt-0.5">{q.category}</span>
                     <span className="text-sm flex-1 leading-relaxed mt-0.5">{q.q}</span>
                     <motion.div animate={{ rotate: activeQ === i ? 180 : 0 }} transition={{ duration: 0.25 }} className="mt-1 flex-shrink-0">
                       <Icon name="chevron" size={15} className="text-muted" />
@@ -106,7 +106,7 @@ export default function InterviewPage() {
                         transition={{ duration: 0.3 }}
                         className="overflow-hidden"
                       >
-                        <div className="bg-surface2 border-t border-white/[0.07] px-5 py-4">
+                        <div className="bg-gray-9002 border-t border-white/[0.07] px-5 py-4">
                           <p className="text-xs font-semibold text-accent uppercase tracking-wider mb-3">Model Answer</p>
                           <p className="text-sm text-muted leading-relaxed">{q.ans}</p>
                         </div>

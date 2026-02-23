@@ -145,7 +145,7 @@ export default function ResumePage() {
                           initial={{ opacity: 0, y: 10 }}
                           animate={{ opacity: 1, y: 0 }}
                           transition={{ delay: i * 0.06 }}
-                          className="flex gap-3 p-4 bg-surface2 border border-white/[0.07] rounded-xl"
+                          className="flex gap-3 p-4 bg-gray-9002 border border-white/[0.07] rounded-xl"
                         >
                           <span className="text-accent font-bold font-display text-sm flex-shrink-0">{i + 1}.</span>
                           <p className="text-muted text-xs leading-relaxed">{tip}</p>
