@@ -1,3 +1,4 @@
+import { useState } from 'react'
 import { motion } from 'framer-motion'
 import { useNavigate } from 'react-router-dom'
 import { useApp } from '../../context/AppContext'
@@ -7,15 +8,11 @@ import ProgressBar from '../../components/ui/ProgressBar'
 import Icon from '../../components/ui/Icon'
 import Button from '../../components/ui/Button'
 
-const [stats, setStats] = useState([])
-const [recentActivity, setRecentActivity] = useState([])
-// TODO: fetch from Django /api/progress/overview/
-
 const QUICK_ACTIONS = [
-  { label: 'Generate Roadmap',   to: '/dashboard/roadmap',   color: '#7c6dfa' },
-  { label: 'Mock Interview',     to: '/dashboard/interview', color: '#38e2c7' },
-  { label: 'Upload Resume',      to: '/dashboard/resume',    color: '#f97aad' },
-  { label: 'Aptitude Test',      to: '/dashboard/aptitude',  color: '#fbbf24' },
+  { label: 'Generate Roadmap', to: '/dashboard/roadmap',   color: '#7c6dfa' },
+  { label: 'Mock Interview',   to: '/dashboard/interview', color: '#38e2c7' },
+  { label: 'Upload Resume',    to: '/dashboard/resume',    color: '#f97aad' },
+  { label: 'Aptitude Test',    to: '/dashboard/aptitude',  color: '#fbbf24' },
 ]
 
 const container = { hidden: {}, show: { transition: { staggerChildren: 0.08 } } }
@@ -25,10 +22,15 @@ export default function OverviewPage() {
   const { user } = useApp()
   const navigate = useNavigate()
 
+  const [stats, setStats]               = useState([])
+  const [skillsData, setSkillsData]     = useState([])
+  const [recentActivity, setRecentActivity] = useState([])
+  // TODO: fetch from Django /api/progress/overview/
+
   return (
     <div>
       <PageHeader
-        title={`Good morning, ${user.name.split(' ')[0]} 👋`}
+        title={`Good morning, ${user?.name?.split(' ')[0] ?? 'there'} 👋`}
         subtitle="Here's a snapshot of your career readiness today."
       />
 
@@ -39,7 +41,7 @@ export default function OverviewPage() {
         animate="show"
         className="grid grid-cols-2 xl:grid-cols-4 gap-5 mb-6"
       >
-        {STATS.map((s) => (
+        {stats.map((s) => (
           <motion.div key={s.label} variants={item}>
             <div className="bg-surface border border-white/[0.07] rounded-2xl p-6 hover:border-accent/30 transition-colors duration-300 hover:-translate-y-0.5 transition-transform">
               <div
@@ -65,7 +67,7 @@ export default function OverviewPage() {
             <Button variant="ghost" size="sm" onClick={() => navigate('/dashboard/progress')}>View All</Button>
           </div>
           <div className="flex flex-col gap-4">
-            {SKILLS_DATA.slice(0, 4).map((s) => (
+            {skillsData.slice(0, 4).map((s) => (
               <div key={s.name}>
                 <div className="flex justify-between mb-2 text-xs">
                   <span className="font-medium">{s.name}</span>
@@ -81,7 +83,7 @@ export default function OverviewPage() {
         <Card delay={0.3}>
           <h3 className="font-display font-bold text-base mb-5">Recent Activity</h3>
           <div className="flex flex-col divide-y divide-white/[0.05]">
-            {RECENT_ACTIVITY.map((a, i) => (
+            {recentActivity.map((a, i) => (
               <div key={i} className="flex items-start gap-3 py-3.5 first:pt-0 last:pb-0">
                 <div className="w-1.5 h-1.5 rounded-full bg-accent mt-1.5 flex-shrink-0" />
                 <div>

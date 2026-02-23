@@ -5,21 +5,24 @@ import Card from '../../components/ui/Card'
 import ProgressBar from '../../components/ui/ProgressBar'
 import ScoreRing from '../../components/ui/ScoreRing'
 
-const [skillsData, setSkillsData] = useState([])
-const [aptitudeHistory, setAptitudeHistory] = useState([])
-const [activityLog, setActivityLog] = useState([])
-// TODO: fetch from Django /api/progress/
-
 const container = { hidden: {}, show: { transition: { staggerChildren: 0.08 } } }
 const item      = { hidden: { opacity: 0, y: 16 }, show: { opacity: 1, y: 0 } }
 
 const statusColor = (s) => (s === 'Completed' || s === 'Done' ? '#38e2c7' : '#fbbf24')
 
 export default function ProgressPage() {
-  const [mounted, setMounted] = useState(false)
-  useEffect(() => { const t = setTimeout(() => setMounted(true), 100); return () => clearTimeout(t) }, [])
+  const [mounted, setMounted]               = useState(false)
+  const [skillsData, setSkillsData]         = useState([])
+  const [aptitudeHistory, setAptitudeHistory] = useState([])
+  const [activityLog, setActivityLog]       = useState([])
+  // TODO: fetch from Django /api/progress/
 
-  const maxBar = Math.max(...APTITUDE_HISTORY.map((d) => d.score))
+  useEffect(() => {
+    const t = setTimeout(() => setMounted(true), 100)
+    return () => clearTimeout(t)
+  }, [])
+
+  const maxBar = aptitudeHistory.length > 0 ? Math.max(...aptitudeHistory.map((d) => d.score)) : 1
 
   return (
     <div>
@@ -49,7 +52,7 @@ export default function ProgressPage() {
         <Card delay={0.2} padding="p-6">
           <h3 className="font-display font-bold text-base mb-6">Skill Proficiency</h3>
           <div className="flex flex-col gap-5">
-            {SKILLS_DATA.map((s) => (
+            {skillsData.map((s) => (
               <div key={s.name}>
                 <div className="flex justify-between mb-2 text-xs">
                   <span className="font-medium">{s.name}</span>
@@ -65,8 +68,8 @@ export default function ProgressPage() {
         <Card delay={0.3} padding="p-6">
           <h3 className="font-display font-bold text-base mb-6">Aptitude Performance Trend</h3>
           <div className="flex items-end gap-2 h-40">
-            {APTITUDE_HISTORY.map((d, i) => {
-              const isLast = i === APTITUDE_HISTORY.length - 1
+            {aptitudeHistory.map((d, i) => {
+              const isLast = i === aptitudeHistory.length - 1
               return (
                 <div key={d.month} className="flex flex-col items-center gap-1.5 flex-1">
                   <motion.div
@@ -104,7 +107,7 @@ export default function ProgressPage() {
               </tr>
             </thead>
             <tbody>
-              {ACTIVITY_LOG.map((row, i) => (
+              {activityLog.map((row, i) => (
                 <motion.tr
                   key={i}
                   initial={{ opacity: 0 }}

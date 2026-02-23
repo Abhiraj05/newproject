@@ -13,19 +13,29 @@ const COMPANY_TYPES = ['Startup', 'Mid-size', 'FAANG', 'Fortune 500', 'Consultin
 const EXP_LEVELS    = ['0-1 year', '1-3 years', '3-5 years', '5+ years']
 
 export default function InterviewPage() {
-  const [form, setForm]     = useState({ role: 'Senior Frontend Developer', company: 'FAANG', exp: '3-5 years' })
-  const [stack, setStack]   = useState(['React', 'TypeScript', 'Node.js'])
-  const [loading, setLoading]   = useState(false)
+  const [form, setForm]           = useState({ role: 'Senior Frontend Developer', company: 'FAANG', exp: '3-5 years' })
+  const [stack, setStack]         = useState(['React', 'TypeScript', 'Node.js'])
+  const [loading, setLoading]     = useState(false)
   const [generated, setGenerated] = useState(false)
-  const [activeQ, setActiveQ] = useState(null)
+  const [activeQ, setActiveQ]     = useState(null)
+  const [questions, setQuestions] = useState([])
+  // TODO: fetch from Django /api/interview/generate/
 
   const set = (k) => (e) => setForm({ ...form, [k]: e.target.value })
 
-  const handleGenerate = () => {
+  const handleGenerate = async () => {
     setLoading(true)
     setGenerated(false)
-    const [questions, setQuestions] = useState([])
-// TODO: fetch from Django /api/interview/generate/
+    // TODO: real API call
+    // const res = await fetch('/api/interview/generate/', {
+    //   method: 'POST',
+    //   headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${localStorage.getItem('token')}` },
+    //   body: JSON.stringify({ role: form.role, company: form.company, exp: form.exp, stack }),
+    // })
+    // const data = await res.json()
+    // setQuestions(data.questions)
+    // setGenerated(true)
+    setLoading(false)
   }
 
   return (
@@ -35,12 +45,11 @@ export default function InterviewPage() {
         subtitle="Generate a tailored interview plan based on your target role and company."
       />
 
-      {/* Config */}
       <Card padding="p-7" className="mb-7">
         <div className="grid md:grid-cols-3 gap-5 mb-5">
-          <FormInput  label="Target Role"   placeholder="Senior Frontend Developer" value={form.role}    onChange={set('role')} />
-          <FormSelect label="Company Type"  options={COMPANY_TYPES}                  value={form.company} onChange={set('company')} />
-          <FormSelect label="Experience"    options={EXP_LEVELS}                     value={form.exp}     onChange={set('exp')} />
+          <FormInput  label="Target Role"  placeholder="Senior Frontend Developer" value={form.role}    onChange={set('role')} />
+          <FormSelect label="Company Type" options={COMPANY_TYPES}                  value={form.company} onChange={set('company')} />
+          <FormSelect label="Experience"   options={EXP_LEVELS}                     value={form.exp}     onChange={set('exp')} />
         </div>
         <div className="mb-6">
           <label className="text-xs font-medium text-muted uppercase tracking-wider block mb-2">
@@ -59,7 +68,6 @@ export default function InterviewPage() {
       <AnimatePresence>
         {generated && !loading && (
           <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.5 }}>
-            {/* Header */}
             <div className="flex items-center justify-between mb-5">
               <h2 className="font-display font-bold text-xl">Question Bank — {form.role}</h2>
               <div className="flex items-center gap-2">
@@ -67,9 +75,8 @@ export default function InterviewPage() {
               </div>
             </div>
 
-            {/* Questions */}
             <div className="flex flex-col gap-3">
-              {INTERVIEW_QUESTIONS.map((q, i) => (
+              {questions.map((q, i) => (
                 <motion.div
                   key={i}
                   initial={{ opacity: 0, y: 12 }}
