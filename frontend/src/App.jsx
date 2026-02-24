@@ -1,20 +1,3 @@
-<<<<<<< HEAD
-import React from "react"
-
-function App() {
-  return (
-    <>
-      <div className="flex justify-center items-center min-h-screen">
-        <div className="bg-linear-to-l from-primary via-pink-400 to-secondary p-20 rounded-2xl border border-dashed border-white">
-          <p className="capitalize font-bold font-mono text-white text-8xl">comming soon....</p>
-        </div>
-      </div>
-    </>
-  )
-}
-
-export default App
-=======
 import { Routes, Route, Navigate } from 'react-router-dom'
 import { AppProvider } from './context/AppContext'
 import LandingPage from './pages/LandingPage'
@@ -55,4 +38,3 @@ export default function App() {
     </AppProvider>
   )
 }
->>>>>>> 5e786faba94bd365ebd3edda9ec005391f4d77b4
