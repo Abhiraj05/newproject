@@ -26,5 +26,6 @@ urlpatterns = [
     path('api/interview/', include('interview.urls')),
     path('api/aptitude/', include('aptitude.urls')),
     path('api/progress/', include('progress.urls')),
+    path('api/user/', include('user.urls')),
     
 ]

@@ -1,3 +1,8 @@
 from django.db import models
-
+from user.models import userprofile
 # Create your models here.
+class userresume(models.Model):
+    user_id = models.ForeignKey(userprofile, on_delete=models.CASCADE)
+    resume_file = models.FileField(upload_to='resumes/')
+    extracted_text = models.TextField()
+    uploaded_at = models.DateTimeField(auto_now_add=True)
