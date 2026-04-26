@@ -13,12 +13,12 @@ from user.serializers import UserRegisterFormSerializer
 # registers the new user
 class UserRegistration(APIView):
     permission_classes = [AllowAny]
-
+    
     def post(self, request, format=None):
-
+       
         if UserRegisterFormSerializer.is_valid(data=request.data):
-            email = request.data('email')
-            password = request.data('password')
+            email = request.data.get('email')
+            password = request.data.get('password')
 
             if User(username=email, email=email):
                 return Response({"message": "user already exist !"}, status=status.HTTP_400_BAD_REQUEST)
@@ -37,11 +37,11 @@ class UserLogin(APIView):
     permission_classes = [AllowAny]
 
     def post(self, request, format=None):
-
+        
         if UserRegisterFormSerializer.is_valid(data=request.data):
-            email = request.data('email')
-            password = request.data('password')
-
+            email = request.data.get('email')
+            password = request.data.get('password')
+    
             try:
                 is_exist = User.object.get(username=email)
 
