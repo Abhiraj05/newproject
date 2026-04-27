@@ -160,7 +160,7 @@ const Main = () => {
                   >
                     <Card className="bg-white/5 border border-white/10  hover:border-amber-400 hover:-translate-y-2 duration-300 rounded-3xl hover:scale-105 transition">
                       <CardContent className="p-8">
-                        <Icon className="w-10 h-10 text-amber-500 mb-5" />
+                        <Icon className="w-10 h-10 text-amber-400 mb-5" />
                         <h3 className="text-2xl font-[Inter] text-gray-100 font-semibold mb-3">
                           {f.title}
                         </h3>
@@ -178,7 +178,7 @@ const Main = () => {
               initial={{ opacity: 0, y: 50 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
-              className="rounded-3xl bg-linear-to-r from-amber-400 to-orange-500 p-12 text-slate-950 text-center"
+              className="rounded-3xl bg-amber-400 p-12 text-slate-950 text-center"
             >
               <h2 className="text-4xl font-bold font-[Inter]">
                 Ready to upgrade your legal workflow?
