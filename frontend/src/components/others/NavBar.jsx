@@ -1,15 +1,15 @@
 import { Scale, Menu } from "lucide-react";
 import GrayButton from "../buttons/GrayButton";
+import Logo from "../../assets/image.png"
 
 const Navbar = ({ navigate }) => {
   return (
     <>
-      <header className="sticky top-0 z-50 border-b border-white/10 backdrop-blur bg-slate-950/80">
-        <div className="max-w-7xl mx-auto px-6 h-16 flex items-center justify-between">
+      <header className="sticky top-0 z-50 border-b border-white/10 backdrop-blur bg-linear-to-l from-slate-950 via-slate-900 to-slate-950">
+        <div className="max-w-7xl mx-auto px-6 h-16 flex items-center justify-between font-[Inter]">
           <a href="/">
             <div className="flex items-center gap-3 font-semibold text-xl">
-              <Scale className="w-6 h-6 text-amber-400" />
-              Legal Next
+              <img className="w-35" src={Logo} alt="" />
             </div>
           </a>
           <nav className="hidden md:flex gap-8 text-md text-slate-300">

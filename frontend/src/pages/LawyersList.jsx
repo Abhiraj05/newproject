@@ -95,7 +95,7 @@ const LawyersList = () => {
       {showLoader && <Loader />}
 
       {!showLoader && (
-        <div className="min-h-screen bg-slate-950 text-white">
+        <div className="min-h-screen bg-linear-to-l from-slate-950 via-slate-900 to-slate-950 text-white font-[Inter]">
           <Navbar navigate={redirect} />
 
    
@@ -154,7 +154,7 @@ const LawyersList = () => {
                   transition={{ delay: index * 0.1 }}
                   viewport={{ once: true }}
                 >
-                  <Card className="bg-white text-slate-900 rounded-3xl overflow-hidden hover:scale-105 transition duration-300">
+                  <Card className="bg-white/5 border border-white/10  hover:border-amber-400 hover:-translate-y-2  rounded-3xl overflow-hidden hover:scale-105 transition duration-300">
                     <motion.img
                       whileHover={{ scale: 1.08 }}
                       transition={{ duration: 0.4 }}
@@ -166,7 +166,7 @@ const LawyersList = () => {
                     <CardContent className="p-6">
                       <div className="flex justify-between items-start mb-4">
                         <div>
-                          <h3 className="text-2xl font-bold">
+                          <h3 className="text-2xl  text-gray-100 font-bold">
                             {item.name}
                           </h3>
                           <p className="text-sm text-slate-500">
@@ -185,7 +185,7 @@ const LawyersList = () => {
                         </span>
                       </div>
 
-                      <div className="flex flex-wrap gap-2 mb-6">
+                      <div className="flex flex-wrap gap-2 mb-6 text-gray-900">
                         {item.tags.map((tag, i) => (
                           <span
                             key={i}

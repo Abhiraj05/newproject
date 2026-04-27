@@ -50,7 +50,7 @@ const SignIn = () => {
       {showLoader && <Loader />}
 
       {!showLoader && (
-        <div className="min-h-screen flex items-center justify-center bg-slate-950 px-4 overflow-hidden">
+        <div className="min-h-screen flex items-center justify-center bg-linear-to-l from-slate-950 via-slate-900 to-slate-950 px-4 overflow-hidden font-[Inter]">
           <motion.div
             animate={{
               scale: [1, 1.2, 1],

@@ -1,4 +1,5 @@
 import { motion } from "motion/react";
+import Logo from "../assets/image.png"
 import {
   Scale,
   Menu,
@@ -11,12 +12,12 @@ import {
 
 const ChatBox = () => {
   return (
-    <div className="h-screen bg-slate-950 text-white flex overflow-hidden">
+    <div className="h-screen bg-linear-to-l from-slate-950 via-slate-900 to-slate-950 text-white flex overflow-hidden font-[Inter]">
       <motion.aside
         initial={{ x: -80, opacity: 0 }}
         animate={{ x: 0, opacity: 1 }}
         transition={{ duration: 0.7 }}
-        className="hidden md:flex w-72 border-r border-white/10 bg-slate-900 flex-col"
+        className="hidden md:flex w-72 border-r border-white/10 bg-linear-to-t from-slate-950 via-slate-900 to-slate-950 flex-col"
       >
         <div className="p-6 text-2xl font-bold border-b border-white/10">
           Chat History
@@ -57,12 +58,13 @@ const ChatBox = () => {
         <motion.header
           initial={{ y: -40, opacity: 0 }}
           animate={{ y: 0, opacity: 1 }}
-          className="h-16 border-b border-white/10 px-6 flex items-center justify-between bg-slate-950/80 backdrop-blur"
+          className="h-16 border-b border-white/10 px-6 flex items-center justify-between bg-linear-to-l from-slate-950 via-slate-900 to-slate-950 backdrop-blur"
         >
           <div className="flex items-center gap-3">
             <Menu className="md:hidden" />
-            <Scale className="w-5 h-5 text-amber-400" />
-            <h1 className="text-xl font-semibold">Legal Next</h1>
+            <div className="flex items-center gap-3 font-semibold text-xl">
+              <img className="w-35" src={Logo} alt="" />
+            </div>
           </div>
 
           <Search className="w-5 h-5 text-slate-400" />
@@ -70,7 +72,7 @@ const ChatBox = () => {
 
         <div className="flex-1 overflow-y-auto px-6 py-8">
           <div className="max-w-4xl mx-auto space-y-8">
-            {/* User */}
+       
             <motion.div
               initial={{ opacity: 0, x: 80 }}
               animate={{ opacity: 1, x: 0 }}
@@ -171,7 +173,7 @@ const ChatBox = () => {
           className="border-t border-white/10 p-6 bg-slate-950"
         >
           <div className="max-w-4xl mx-auto">
-            <div className="flex items-center gap-3 bg-white/5 border border-white/10 rounded-3xl px-4 py-3">
+            <div className="flex items-center gap-3 bg-linear-to-l from-slate-950 via-slate-900 to-slate-950 border border-white/10 rounded-3xl px-4 py-3">
               <motion.button whileHover={{ scale: 1.1 }}>
                 <Paperclip className="w-5 h-5 text-slate-400" />
               </motion.button>
