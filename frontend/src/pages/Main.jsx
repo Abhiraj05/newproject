@@ -59,7 +59,7 @@ const Main = () => {
               </span>
               <h1
                 className="font-[Inter] text-5xl md:text-7xl font-extrabold leading-tight
-                bg-linear-to-r from-gray-300 via-purple-400 to-amber-200
+                bg-linear-to-r from-gray-300 via-purple-300 to-amber-200
                 bg-clip-text text-transparent"
               >
                 Your Intelligent Legal Partner

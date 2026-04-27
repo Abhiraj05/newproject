@@ -47,7 +47,7 @@ const About = () => {
       {showLoader && <Loader />}
 
       {!showLoader && (
-        <div className="min-h-screen bg-linear-to-l from-slate-950 via-slate-900 to-slate-950 text-white">
+        <div className="min-h-screen bg-linear-to-l from-slate-950 via-slate-900 to-slate-950 text-white font-[Inter]">
           <NavBar navigate={redirect} />
 
           <main className="max-w-5xl mx-auto px-6 py-24 space-y-28">
