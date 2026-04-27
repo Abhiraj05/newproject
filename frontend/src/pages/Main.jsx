@@ -107,7 +107,7 @@ const Main = () => {
                       className="w-full h-full object-cover"
                     />
 
-                    <div className="absolute inset-0 bg-gradient-to-t from-slate-950/70 to-transparent"></div>
+                    <div className="absolute inset-0 bg-linear-to-t from-slate-950/70 to-transparent"></div>
 
                     <div className="absolute bottom-4 left-4">
                       <p className="text-white text-xl font-semibold">
