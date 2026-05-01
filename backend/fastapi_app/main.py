@@ -1,17 +1,13 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
-from dotenv import load_dotenv  
-from .schemas.requestSchema import ResumeAnalysisRequest 
+from langchain_google_genai import ChatGoogleGenerativeAI
+from langchain_google_genai import GoogleGenerativeAIEmbeddings
+from dotenv import load_dotenv
 import os
-from langchain_groq import ChatGroq
-import json
-from prompt.system_prompt import llm_prompt
+
 app = FastAPI()
 
-origins = [
-    "http://localhost:8000",
-    "http://localhost:5173"
-]
+origins = ["http://127.0.0.1:8000/"]
 
 app.add_middleware(
     CORSMiddleware,
@@ -21,51 +17,33 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-# load the api key
 load_dotenv()
-GROQ_API_KEY = os.getenv("GROQ_API_KEY")
+GOOGLE_API_KEY = os.getenv("GOOGLE_API_KEY")
 
-# resume analysis and return a json response with insights and suggestions
-@app.post("/analyze_resume")
-async def analyze_resume(request: ResumeAnalysisRequest ):
-    os.environ["GROQ_API_KEY"] = GROQ_API_KEY
-    resume_text = request.text
 
-    # Intializing groq model
-    llm_model = ChatGroq(model="qwen/qwen3-32b",
-                         temperature=0,
-                         max_retries=2,
-                         max_tokens=None,
-                         timeout=30)
-    
-     # llm model request & response prompt
+@app.get("/")
+async def scan_doc():
+    model = ChatGoogleGenerativeAI(
+        model="gemini-3-flash-preview",
+        temperature=1.0,
+        max_tokens=None,
+        timeout=None,
+        max_retries=2
+    )
+
     messages = [
-    ("system", llm_prompt),
-    (
-        "human",
-        f"""
-        Analyze the following resume carefully.
+        (
+            "system",
+            "You are a helpful assistant that translates English to French. Translate the user sentence.",
+        ),
+        ("human", "I love programming."),
+    ]
+    ai_msg = model.invoke(messages)
+    print(ai_msg.content)
 
-        Resume Content:
-        ----------------
-        {request.resume_text}
-        ----------------
 
-        Instructions:
-        - Perform detailed ATS-style evaluation.
-        - Be strict but fair in scoring.
-        - Penalize missing metrics, vague descriptions, and lack of measurable impact.
-        - Check for keyword alignment and clarity.
-        - Ensure section scores logically align with overall score.
-        - Provide realistic and actionable improvements.
-
-        Remember:
-        - Return ONLY valid JSON.
-        - Follow the exact structure defined in the system instructions.
-        """
-    ),
-]
-    
-    llm_model_response = llm_model.invoke(messages)
-    json_data_file = json.loads(llm_model_response.content)
-    return {"analysis_result": json_data_file}
+@app.get("/generate_embeddings")
+async def generate_embeddings():
+    embeddings = GoogleGenerativeAIEmbeddings(model="gemini-embedding-2-preview")
+    vector = embeddings.embed_query("hello, world!")
+    print(vector[:5])

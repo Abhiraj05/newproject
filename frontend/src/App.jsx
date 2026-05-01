@@ -1,40 +1,27 @@
-import { Routes, Route, Navigate } from 'react-router-dom'
-import { AppProvider } from './context/AppContext'
-import LandingPage from './pages/LandingPage'
-import LoginPage from './pages/LoginPage'
-import RegisterPage from './pages/RegisterPage'
-import DashboardLayout from './components/layout/DashboardLayout'
-import OverviewPage from './pages/dashboard/OverviewPage'
-import RoadmapPage from './pages/dashboard/RoadmapPage'
-import InterviewPage from './pages/dashboard/InterviewPage'
-import ResumePage from './pages/dashboard/ResumePage'
-import AptitudePage from './pages/dashboard/AptitudePage'
-import ProgressPage from './pages/dashboard/ProgressPage'
-import SettingsPage from './pages/dashboard/SettingsPage'
+import { useState } from "react";
+import SignIn from "./pages/Signin";
+import SignUp from "./pages/Signup";
+import Main from "./pages/Main";
+import LawyersList from "./pages/LawyersList";
+import ChatBox from "./pages/ChatBox";
+import About from "./pages/About";
+import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 
-export default function App() {
+function App() {
   return (
-    <AppProvider>
-      <Routes>
-        {/* Public routes */}
-        <Route path="/" element={<LandingPage />} />
-        <Route path="/login" element={<LoginPage />} />
-        <Route path="/register" element={<RegisterPage />} />
-
-        {/* Dashboard routes */}
-        <Route path="/dashboard" element={<DashboardLayout />}>
-          <Route index element={<OverviewPage />} />
-          <Route path="roadmap" element={<RoadmapPage />} />
-          <Route path="interview" element={<InterviewPage />} />
-          <Route path="resume" element={<ResumePage />} />
-          <Route path="aptitude" element={<AptitudePage />} />
-          <Route path="progress" element={<ProgressPage />} />
-          <Route path="settings" element={<SettingsPage />} />
-        </Route>
-
-        {/* Fallback */}
-        <Route path="*" element={<Navigate to="/" replace />} />
-      </Routes>
-    </AppProvider>
-  )
+    <>
+      <Router>
+        <Routes>
+          <Route path="/" element={<Main />} />
+          <Route path="/signin" element={<SignIn />} />
+          <Route path="/signup" element={<SignUp />} />
+          <Route path="/lawyers" element={<LawyersList />} />
+          <Route path="/chat" element={<ChatBox />} />
+          <Route path="/about" element={<About />} />
+        </Routes>
+      </Router>
+    </>
+  );
 }
+
+export default App;
