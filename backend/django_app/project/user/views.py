@@ -15,10 +15,10 @@ class UserRegistration(APIView):
     permission_classes = [AllowAny]
     
     def post(self, request, format=None):
-       
-        if UserRegisterFormSerializer.is_valid(data=request.data):
-            email = request.data.get('email')
-            password = request.data.get('password')
+        serializer = UserRegisterFormSerializer(data=request.data)
+        if serializer.is_valid():
+            email = serializer.validated_data['email']
+            password = serializer.validated_data['password']
 
             if User(username=email, email=email):
                 return Response({"message": "user already exist !"}, status=status.HTTP_400_BAD_REQUEST)
@@ -36,11 +36,11 @@ class UserRegistration(APIView):
 class UserLogin(APIView):
     permission_classes = [AllowAny]
 
-    def post(self, request, format=None):
-        
-        if UserRegisterFormSerializer.is_valid(data=request.data):
-            email = request.data.get('email')
-            password = request.data.get('password')
+    def post(self, request, format=None):  
+        serializer = UserRegisterFormSerializer(data=request.data)
+        if serializer.is_valid():
+            email = serializer.validated_data['email']
+            password = serializer.validated_data['password']
     
             try:
                 is_exist = User.object.get(username=email)
