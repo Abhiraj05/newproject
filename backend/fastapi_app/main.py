@@ -32,10 +32,10 @@ GOOGLE_API_KEY = os.getenv("GOOGLE_API_KEY")
 async def generate_embeddings(text: DocumentText):
     user_document_text = text.document_text
     
-    #genertes chunks
+    # genertes chunks
     chunks = text_splitter(user_document_text)
     
-    #genertes embeddings
+    # genertes embeddings
     embeddings = embed_text(chunks)
 
     # add chunks & embeddings to the collection
