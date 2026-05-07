@@ -1,9 +1,14 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from langchain_google_genai import ChatGoogleGenerativeAI
-from langchain_google_genai import GoogleGenerativeAIEmbeddings
 from dotenv import load_dotenv
 import os
+from rag import text_splitter, embed_text
+from services.vector_db.operations import add_embedding
+from services.vector_db.collections import get_collections
+from langchain_google_genai import GoogleGenerativeAIEmbeddings
+from schemas.request_schemas import DocumentText, QueryText
+
 
 app = FastAPI()
 
@@ -42,8 +47,60 @@ async def scan_doc():
     print(ai_msg.content)
 
 
-@app.get("/generate_embeddings")
-async def generate_embeddings():
-    embeddings = GoogleGenerativeAIEmbeddings(model="gemini-embedding-2-preview")
-    vector = embeddings.embed_query("hello, world!")
-    print(vector[:5])
+@app.post("/generate_embeddings")
+async def generate_embeddings(text: DocumentText):
+    user_document_text = text.document_text
+    chunks = text_splitter(user_document_text)
+    embeddings = embed_text(chunks)
+    add_embedding(chunks, embeddings)
+
+
+@app.post("/user_query")
+async def rag_answer(query: QueryText):
+    user_query = query.query_text
+    
+    # embedding model
+    query_embedding_model = GoogleGenerativeAIEmbeddings(
+        model="gemini-embedding-2-preview",
+        task_type="retrieval_query")
+    
+    # llm model
+    llm_model = ChatGoogleGenerativeAI(
+        model="gemini-3-flash-preview",
+        temperature=1.0,
+        max_tokens=None,
+        timeout=None,
+        max_retries=2
+    )
+
+
+    # embed user query
+    embeded_query = query_embedding_model.embed_query(user_query)
+
+    # client
+    collection = get_collections()
+
+    # retrieve from chormadb
+    results = collection.query(
+        query_embeddings=[embeded_query],
+        n_results=2
+    )
+
+    # retrieved chunks
+    retrieved_chunks = results["documents"][0]
+    context = "\n\n".join(retrieved_chunks)
+
+
+    # generate
+    prompt = f"""answer using only context below.
+    If the answer is not in context, say "I don't know!"
+    
+    Context:
+    {context}
+    
+    Question:{user_query}
+    Answer:"""
+
+    response = llm_model.invoke(prompt)
+
+    return {"answer": response.content}
