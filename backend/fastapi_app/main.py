@@ -26,35 +26,24 @@ load_dotenv()
 GOOGLE_API_KEY = os.getenv("GOOGLE_API_KEY")
 
 
-@app.get("/")
-async def scan_doc():
-    model = ChatGoogleGenerativeAI(
-        model="gemini-3-flash-preview",
-        temperature=1.0,
-        max_tokens=None,
-        timeout=None,
-        max_retries=2
-    )
 
-    messages = [
-        (
-            "system",
-            "You are a helpful assistant that translates English to French. Translate the user sentence.",
-        ),
-        ("human", "I love programming."),
-    ]
-    ai_msg = model.invoke(messages)
-    print(ai_msg.content)
-
-
+# generate_embeddings
 @app.post("/generate_embeddings")
 async def generate_embeddings(text: DocumentText):
     user_document_text = text.document_text
+    
+    #genertes chunks
     chunks = text_splitter(user_document_text)
+    
+    #genertes embeddings
     embeddings = embed_text(chunks)
+
+    # add chunks & embeddings to the collection
     add_embedding(chunks, embeddings)
 
 
+
+# handles user query
 @app.post("/user_query")
 async def rag_answer(query: QueryText):
     user_query = query.query_text
@@ -77,7 +66,7 @@ async def rag_answer(query: QueryText):
     # embed user query
     embeded_query = query_embedding_model.embed_query(user_query)
 
-    # client
+    # get's collection
     collection = get_collections()
 
     # retrieve from chormadb
@@ -101,6 +90,7 @@ async def rag_answer(query: QueryText):
     Question:{user_query}
     Answer:"""
 
+    # model response
     response = llm_model.invoke(prompt)
 
     return {"answer": response.content}
