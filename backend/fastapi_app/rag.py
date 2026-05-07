@@ -16,7 +16,7 @@ def text_splitter(document_text):
         separators=["\n", ". ", " "]
     )
     chunks = splitter.split_text(document_text)
-    print(f"Total chunks {len(chunks)}")
+
     return chunks
 
 
@@ -27,8 +27,8 @@ def embed_text(chunks):
         model="gemini-embedding-2-preview",
         task_type="retrieval_document")
       
-    for chunks in chunks:
-        vector = embeddings.embed_query(chunks)
+    for chunk in chunks:
+        vector = embeddings.embed_query(chunk)
         vectors.append(vector)
         
     return vectors

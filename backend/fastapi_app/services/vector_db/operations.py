@@ -1,9 +1,10 @@
-from .collections import get_collections
+from services.vector_db.collections import get_collections
 import uuid
 
+# get's collection
 collection = get_collections()
 
-
+# add embeddings to the collection
 def add_embedding(chunks, embeddings):
     collection.add(
         ids=[str(uuid.uuid4()) for _ in chunks],
@@ -12,7 +13,7 @@ def add_embedding(chunks, embeddings):
     )
 
 
-
+# get queries of specified user
 def query_embedding(user_id, query_embedding, top_k=5):
     return collection.query(
         query_embeddings=[query_embedding],
