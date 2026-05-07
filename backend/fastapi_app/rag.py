@@ -8,7 +8,7 @@ import os
 load_dotenv()
 GOOGLE_API_KEY = os.getenv("GOOGLE_API_KEY")
 
-# chunking
+# creates chunking
 def text_splitter(document_text):
     splitter = RecursiveCharacterTextSplitter(
         chunk_size=200,
@@ -20,7 +20,7 @@ def text_splitter(document_text):
     return chunks
 
 
-# embeddings
+# creates embeddings
 def embed_text(chunks):
     vectors = []
     embeddings = GoogleGenerativeAIEmbeddings(
