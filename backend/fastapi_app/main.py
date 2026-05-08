@@ -1,8 +1,8 @@
+import os
+from dotenv import load_dotenv
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from langchain_google_genai import ChatGoogleGenerativeAI
-from dotenv import load_dotenv
-import os
 from rag import text_splitter, embed_text
 from services.vector_db.operations import add_embedding
 from services.vector_db.collections import get_collections

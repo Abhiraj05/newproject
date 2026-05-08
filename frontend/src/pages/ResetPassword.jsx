@@ -5,7 +5,7 @@ import axios from "axios";
 const ResetPassword = () => {
   const [showLoader, setLoader] = useState(false);
   const [formData, setFormData] = useState({
-    new_password: "",
+    password: "",
   });
   const [confirmPassword, setConfirmPassword] = useState("");
 
@@ -29,7 +29,7 @@ const ResetPassword = () => {
         );
 
         setFormData({
-          new_password: "",
+          password: "",
         });
         setConfirmPassword("")
       } catch (error) {
@@ -79,7 +79,7 @@ const ResetPassword = () => {
             <input
               type="text"
               name="email"
-              value={formData.new_password}
+              value={formData.password}
               onChange={handleChange}
               placeholder="Enter your password"
               className="w-full px-5 py-3  rounded-2xl bg-slate-900 text-white placeholder-slate-400 border border-white/10 focus:outline-none focus:ring-2 focus:ring-amber-400"

@@ -1,14 +1,15 @@
+import os
+from dotenv import load_dotenv
 from langchain_text_splitters import RecursiveCharacterTextSplitter
 from langchain_google_genai import GoogleGenerativeAIEmbeddings
-from dotenv import load_dotenv
-import os
+
 
 
 
 load_dotenv()
 GOOGLE_API_KEY = os.getenv("GOOGLE_API_KEY")
 
-# creates chunking
+# creates chunks
 def text_splitter(document_text):
     splitter = RecursiveCharacterTextSplitter(
         chunk_size=200,
