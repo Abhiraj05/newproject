@@ -5,6 +5,8 @@ import Main from "./pages/Main";
 import LawyersList from "./pages/LawyersList";
 import ChatBox from "./pages/ChatBox";
 import About from "./pages/About";
+import ForgotPassword from "./pages/ForgotPassword";
+import ResetPassword from "./pages/ResetPassword";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 
 function App() {
@@ -18,6 +20,8 @@ function App() {
           <Route path="/lawyers" element={<LawyersList />} />
           <Route path="/chat" element={<ChatBox />} />
           <Route path="/about" element={<About />} />
+          <Route path="/forgotpassword" element={<ForgotPassword />} />
+          <Route path="/resetpassword" element={<ResetPassword />} />
         </Routes>
       </Router>
     </>
