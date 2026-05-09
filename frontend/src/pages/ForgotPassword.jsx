@@ -23,6 +23,7 @@ const ForgotPassword = () => {
 
     if (!formData.email) {
       alert("Please the your email id");
+      return
     } else {
       try {
         await axios.post(
