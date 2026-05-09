@@ -24,6 +24,7 @@ const SignIn = () => {
 
     if (!formData.email && !formData.password) {
       alert("Please fill the details");
+      return
     } else {
       try {
         await axios.post("http://127.0.0.1:8000/api/auth/login/", formData);

@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { motion } from "motion/react";
 import YellowButton from "../components/buttons/YellowButton";
 import GrayButton from "../components/buttons/GrayButton";
@@ -82,6 +82,21 @@ const LawyersList = () => {
   const [showLoader, setLoader] = useState(false);
   const navigate = useNavigate();
 
+  useEffect(() => {
+    fetchData();
+  }, [dataList]);
+
+  const fetchData = async () => {
+    try {
+      const response = await axios.get(
+        "http://127.0.0.1:8000/api/lawyers/get_lawyers/",
+      );
+      setDataList(lawyers)
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
   const redirect = (url) => {
     setLoader(true);
     setTimeout(() => {
@@ -98,7 +113,6 @@ const LawyersList = () => {
         <div className="min-h-screen bg-linear-to-l from-slate-950 via-slate-900 to-slate-950 text-white font-[Inter]">
           <Navbar navigate={redirect} />
 
-   
           <section className="max-w-7xl mx-auto px-6 py-20">
             <motion.h1
               initial={{ opacity: 0, y: 40 }}
@@ -119,7 +133,6 @@ const LawyersList = () => {
               compliance, advisory and business law.
             </motion.p>
 
-      
             <motion.div
               initial={{ opacity: 0, y: 50 }}
               animate={{ opacity: 1, y: 0 }}
@@ -143,7 +156,6 @@ const LawyersList = () => {
             </motion.div>
           </section>
 
-     
           <section className="max-w-7xl mx-auto px-6 pb-20">
             <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
               {dataList?.map((item, index) => (
@@ -169,9 +181,7 @@ const LawyersList = () => {
                           <h3 className="text-2xl  text-gray-100 font-bold">
                             {item.name}
                           </h3>
-                          <p className="text-sm text-slate-500">
-                            {item.role}
-                          </p>
+                          <p className="text-sm text-slate-500">{item.role}</p>
                         </div>
 
                         <span
@@ -197,10 +207,7 @@ const LawyersList = () => {
                       </div>
 
                       <div className="flex gap-3">
-                        <YellowButton
-                          className="w-full"
-                          title="Contact"
-                        />
+                        <YellowButton className="w-full" title="Contact" />
 
                         <GrayButton title="Send Mail">
                           <Mail className="w-4 h-4" />
@@ -213,7 +220,6 @@ const LawyersList = () => {
             </div>
           </section>
 
-        
           <section className="max-w-7xl mx-auto px-6 pb-24">
             <motion.div
               initial={{ opacity: 0, y: 60 }}

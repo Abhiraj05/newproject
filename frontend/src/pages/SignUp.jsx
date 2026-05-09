@@ -26,14 +26,13 @@ const SignUp = () => {
 
     if (!formData.email && !formData.password && !confirmPassword) {
       alert("Please fill the details");
-      return;
+      return
     }
-
     if (formData.password !== confirmPassword) {
       alert("Password doesn't match");
-      return;
+      return
     }
-
+    else{
     try {
       await axios.post("http://127.0.0.1:8000/api/auth/register/", formData);
 
@@ -46,7 +45,7 @@ const SignUp = () => {
     } catch (error) {
       console.log(error);
     }
-  };
+  };}
 
   const redirect = (url) => {
     setLoader(true);

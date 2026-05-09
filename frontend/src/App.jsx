@@ -7,7 +7,9 @@ import ChatBox from "./pages/ChatBox";
 import About from "./pages/About";
 import ForgotPassword from "./pages/ForgotPassword";
 import ResetPassword from "./pages/ResetPassword";
+import Contact from "./pages/contact";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+
 
 function App() {
   return (
@@ -22,6 +24,7 @@ function App() {
           <Route path="/about" element={<About />} />
           <Route path="/forgotpassword" element={<ForgotPassword />} />
           <Route path="/resetpassword" element={<ResetPassword />} />
+          <Route path="/contact" element={<Contact />} />
         </Routes>
       </Router>
     </>

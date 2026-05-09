@@ -20,7 +20,12 @@ const ResetPassword = () => {
     e.preventDefault();
 
     if (!formData.new_password && !confirmPassword) {
-      alert("Please the your email id");
+      alert("Please fill the details");
+      return
+    }
+    if (formData.new_password !== confirmPassword) {
+      alert("Password doesn't match");
+      return
     } else {
       try {
         await axios.post(
@@ -31,7 +36,7 @@ const ResetPassword = () => {
         setFormData({
           password: "",
         });
-        setConfirmPassword("")
+        setConfirmPassword("");
       } catch (error) {
         console.log(error);
       }
@@ -77,8 +82,8 @@ const ResetPassword = () => {
             transition={{ delay: 0.5 }}
           >
             <input
-              type="text"
-              name="email"
+              type="password"
+              name="password"
               value={formData.password}
               onChange={handleChange}
               placeholder="Enter your password"
