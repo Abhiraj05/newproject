@@ -2,19 +2,46 @@ from rest_framework import serializers
 from user.models import User
 
 
-class UserRegisterFormSerializer(serializers.ModelSerializer):
+class UserRegisterSerializer(serializers.ModelSerializer):
+
     class Meta:
         model = User
+
         fields = ['email', 'password']
 
+        extra_kwargs = {
+            'password': {'write_only': True}
+        }
 
-class ForgotPasswordFormSerializer(serializers.ModelSerializer):
+
+class ForgotPasswordSerializer(serializers.ModelSerializer):
+
     class Meta:
         model = User
+
         fields = ['email']
-        
-        
-class SetNewPasswordFormSerializer(serializers.ModelSerializer):
+
+
+class SetNewPasswordSerializer(serializers.ModelSerializer):
+
     class Meta:
         model = User
+
         fields = ['password']
+
+        extra_kwargs = {
+            'password': {'write_only': True}
+        }
+
+class UserProfileSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = User
+
+        fields = [
+            "name",
+            "phone_no",
+            "address",
+            "gender",
+            "dob"
+        ]

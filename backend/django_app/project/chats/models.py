@@ -9,7 +9,7 @@ class BotChats(models.Model):
     class Sender_Type(models.TextChoices):
         HUMAN = 'Human'
         BOT = 'Bot'
-    conversation_id = models.ForeignKey(Conversations , on_delete=models.CASCADE)
+    conversation = models.ForeignKey(Conversations , on_delete=models.CASCADE)
     sender = models.CharField(choices=Sender_Type.choices , default=Sender_Type.HUMAN)
     message = models.JSONField()
     created_at = models.DateTimeField()
