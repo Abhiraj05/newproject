@@ -10,20 +10,26 @@ import {
   Send,
   Bot,
   X,
+  Upload,
 } from "lucide-react";
 import Loader from "../components/others/Loader";
 import { useNavigate } from "react-router-dom";
-
+import axios from "axios";
 
 const ChatBox = () => {
   const [showLoader, setLoader] = useState(false);
   const [mobileMenu, setMobileMenu] = useState(false);
   const [formData, setFormData] = useState({
-    userinput: "",
+    sender: "",
+  });
+  const [textData, setTextData] = useState({
+    file: "",
   });
   const [chatHistory, setChatHistory] = useState([]);
+  const [documentReady, setDocumentReady] = useState(false);
+  const [isProcessing, setIsProcessing] = useState(false);
+  const [line, setLine] = useState(false);
   const navigate = useNavigate();
-
 
   const handleChange = (e) => {
     setFormData({
@@ -32,22 +38,29 @@ const ChatBox = () => {
     });
   };
 
+  const handleFileChange = (e) => {
+    if (e.target.name === "file") {
+      setTextData({ ...textData, file: e.target.files[0] });
+      setDocumentReady(true);
+    }
+  };
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    if (!formData.userinput) {
+    if (!formData.sender) {
       alert("Please enter the message");
       return;
     } else {
       try {
-        await axios.post(
+        const response=await axios.post(
           "http://127.0.0.1:8000/api/chats/user_input/",
           formData,
         );
         fetchData();
         setFormData({
-          userinput: "",
+          sender: "",
         });
+        console.log(response.data)
       } catch (error) {
         console.log(error);
       }
@@ -64,6 +77,34 @@ const ChatBox = () => {
       console.log(error);
     }
   };
+
+  const handelFileSubmit = async (e) => {
+    e.preventDefault();
+    if (!textData.file) {
+      alert("upload a file");
+      return;
+    } else {
+      const formFileData = new FormData();
+      if (textData.file) {
+        formFileData.append("file", textData.file);
+      }
+      try {
+        setLine(true);
+        setIsProcessing(true);
+        const response = await axios.post(
+          "http://127.0.0.1:8000/api/extractor/extract_text/",
+          formFileData,
+        );
+        console.log(response.data);
+        setIsProcessing(false);
+        console.log(response.data.message);
+        alert(response.data.message)
+      } catch (error) {
+        console.log(error);
+      }
+    }
+  };
+
   const redirect = (url) => {
     setLoader(true);
     setTimeout(() => {
@@ -86,7 +127,6 @@ const ChatBox = () => {
             <div className="p-6 text-2xl font-bold border-b border-white/10">
               Chat History
             </div>
-
             <nav className="flex-1 p-4 space-y-2 text-slate-300">
               <motion.div
                 whileHover={{ x: 5 }}
@@ -209,23 +249,60 @@ const ChatBox = () => {
                     Can you analyze the attached contract for risk factors?
                   </div>
                 </motion.div>
-
                 <motion.div
                   initial={{ opacity: 0, x: -80 }}
                   animate={{ opacity: 1, x: 0 }}
                 >
                   <div className="flex items-center gap-2 mb-2">
                     <Bot className="w-5 h-5 text-amber-400" />
-                    <span className="text-sm text-slate-400">Law Mate AI</span>
+                    <span className="text-sm text-slate-400">
+                      Legal Next AI
+                    </span>
                   </div>
 
                   <div className="bg-white text-black max-w-xl rounded-3xl rounded-tl-md p-5">
-                    Certainly. Please upload the document and I’ll begin the
-                    risk assessment immediately.
+                    <div className="mb-5">
+                      Please upload the document and I’ll begin the risk
+                      assessment immediately.
+                    </div>
+                    <motion.label
+                      whileHover={{ scale: 1.05 }}
+                      className="flex items-center gap-2 border border-slate-950 px-3 py-2 rounded-xl cursor-pointer w-fit"
+                    >
+                      <Paperclip className="w-5 h-5 text-slate-950" />
+
+                      <span className="text-sm text-slate-950">
+                        {textData.file ? textData.file.name : "Choose File"}
+                      </span>
+                      <form onSubmit={handelFileSubmit}>
+                        <input
+                          type="file"
+                          name="file"
+                          onChange={handleFileChange}
+                          className="hidden"
+                        />
+                        <motion.button
+                          type="submit"
+                          whileHover={{ scale: 1.1 }}
+                          className="bg-slate-950 text-gray-300 p-3 rounded-2xl"
+                        >
+                          <Upload className="w-4 h-4" />
+                        </motion.button>
+                      </form>
+                    </motion.label>
+                    {line && (
+                      <div className="mt-4">
+                        <span className="text-sm text-slate-950">
+                          {isProcessing
+                            ? "Processing document..."
+                            : "Ready for chat"}
+                        </span>
+                      </div>
+                    )}
                   </div>
                 </motion.div>
 
-                <motion.div
+                {/* <motion.div
                   initial={{ opacity: 0, x: 80 }}
                   animate={{ opacity: 1, x: 0 }}
                   className="flex justify-end"
@@ -239,9 +316,9 @@ const ChatBox = () => {
                       </div>
                     </div>
                   </div>
-                </motion.div>
+                </motion.div> */}
 
-                <motion.div
+                {/* <motion.div
                   initial={{ opacity: 0, x: -80 }}
                   animate={{ opacity: 1, x: 0 }}
                 >
@@ -290,7 +367,7 @@ const ChatBox = () => {
                       </motion.button>
                     </div>
                   </div>
-                </motion.div>
+                </motion.div> */}
               </div>
             </div>
 
@@ -302,16 +379,17 @@ const ChatBox = () => {
               <form onSubmit={handleSubmit}>
                 <div className="max-w-4xl mx-auto">
                   <div className="flex items-center gap-3 bg-linear-to-l from-slate-950 via-slate-900 to-slate-950 border border-white/10 rounded-3xl px-4 py-3">
-                    <motion.button whileHover={{ scale: 1.1 }}>
-                      <Paperclip className="w-5 h-5 text-slate-400" />
-                    </motion.button>
-
                     <input
+                      disabled={!documentReady}
                       type="text"
-                      name="userinput"
-                      value={formData.userinput}
+                      name="sender"
+                      value={formData.sender}
                       onChange={handleChange}
-                      placeholder="Ask a legal question..."
+                      placeholder={
+                        documentReady
+                          ? "Ask a legal question..."
+                          : "Upload a document first..."
+                      }
                       className="flex-1 bg-transparent outline-none"
                     />
 

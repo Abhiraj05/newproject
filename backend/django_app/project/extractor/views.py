@@ -42,20 +42,26 @@ class ExtractFileText(APIView):
     # send extracted text to fastapi server
     def post(self, request, format=None):
         serializer=DocumentSerializer(data=request.data)
-        
+      
         if serializer.is_valid():
             file = request.FILES.get("file")
+   
             try:
                 if file is None:
                     return Response({"message": "file upload failed !"},status=status.HTTP_400_BAD_REQUEST)
 
                 extracted_text = self.extract_text(file)
-
+           
                 if not extracted_text:
                     return Response({"message": "text extraction failed !"},status=status.HTTP_400_BAD_REQUEST)
                 
-                requests.post("http://127.0.0.1:8001/generate_embeddings",
-                                        json={"text": extracted_text})
+                response=requests.post("http://127.0.0.1:8001/generate_embeddings",
+                                        json={"document_text": extracted_text})
+               
+                return Response(response.json(), status=status.HTTP_200_OK)
             except:
                 return Response({"message": "invalid file type !"}, status=status.HTTP_400_BAD_REQUEST)
+        
+        else:
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
                 

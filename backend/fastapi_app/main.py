@@ -29,9 +29,10 @@ GOOGLE_API_KEY = os.getenv("GOOGLE_API_KEY")
 
 # generate_embeddings
 @app.post("/generate_embeddings")
-async def generate_embeddings(text: DocumentText):
-    user_document_text = text.document_text
-    
+async def generate_embeddings(request: DocumentText):
+  
+    user_document_text = request.document_text
+   
     # genertes chunks
     chunks = text_splitter(user_document_text)
     
@@ -40,13 +41,15 @@ async def generate_embeddings(text: DocumentText):
 
     # add chunks & embeddings to the collection
     add_embedding(chunks, embeddings)
+    
+    return {"message":"embeddings generated successfully"}
 
 
 
 # handles user query
 @app.post("/user_query")
-async def rag_answer(query: QueryText):
-    user_query = query.query_text
+async def rag_answer(request: QueryText):
+    user_query = request.query_text
     
     # embedding model
     query_embedding_model = GoogleGenerativeAIEmbeddings(
@@ -93,4 +96,4 @@ async def rag_answer(query: QueryText):
     # model response
     response = llm_model.invoke(prompt)
 
-    return {"answer": response.content}
+    return response.content
