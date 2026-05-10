@@ -2,14 +2,14 @@ from rest_framework import status
 from django.contrib.auth import authenticate
 from rest_framework.views import APIView
 from rest_framework.response import Response
-from rest_framework.permissions import AllowAny
+from rest_framework.permissions import AllowAny , IsAuthenticated
 from django.contrib.auth.models import User
 from rest_framework_simplejwt.tokens import RefreshToken
 from common.email import send_email
 from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
 from django.utils.encoding import force_bytes
 from django.contrib.auth.tokens import PasswordResetTokenGenerator
-from user.serializers import UserRegisterFormSerializer, ForgotPasswordFormSerializer, SetNewPasswordFormSerializer
+from user.serializers import UserRegisterFormSerializer, ForgotPasswordFormSerializer, SetNewPasswordFormSerializer , UserProfileSerializer
 
 
 # Create your views here.
@@ -163,3 +163,34 @@ class SetNewPassword(APIView):
                     return Response({"message": "invalid or expired token !"}, status=status.HTTP_400_BAD_REQUEST)
             except:
                 return Response({"message": "invalid password !"}, status=status.HTTP_400_BAD_REQUEST)
+
+
+class EditProfile(APIView):
+    permission_classes = [IsAuthenticated]
+
+    def post(self , request, format=None):
+        serializer = UserProfileSerializer(data=request.data)
+        if serializer.is_valid():
+            name = serializer.validated_data['name']
+            dob = serializer.validated_data['dob']
+            address = serializer.validated_data['address']
+            phone_no = serializer.validated_data['phone_no']
+            gender = serializer.validated_data['gender']
+
+            user = request.user
+            if User.objects.filter(user).exists():
+                user.name = name
+                user.dob = dob
+                user.address = address
+                user.phone_no = phone_no
+                user.gender = gender
+
+                user.save()
+                return Response({
+                "message": "Profile updated successfully"
+            })
+
+        return Response(
+            serializer.errors,
+            status=status.HTTP_400_BAD_REQUEST
+        )

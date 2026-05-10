@@ -1,6 +1,6 @@
 from models import model
 
-sentences = [
+sentences=[
     "The weather is lovely today.",
     "It's so sunny outside!",
     "He drove to the stadium.",
