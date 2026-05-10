@@ -8,6 +8,7 @@ import About from "./pages/About";
 import ForgotPassword from "./pages/ForgotPassword";
 import ResetPassword from "./pages/ResetPassword";
 import Contact from "./pages/contact";
+import ProfileEdit from "./pages/ProfileEdit";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 
 
@@ -25,6 +26,7 @@ function App() {
           <Route path="/forgotpassword" element={<ForgotPassword />} />
           <Route path="/resetpassword" element={<ResetPassword />} />
           <Route path="/contact" element={<Contact />} />
+          <Route path="/profile" element={<ProfileEdit />} />
         </Routes>
       </Router>
     </>

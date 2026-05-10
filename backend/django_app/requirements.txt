@@ -3,3 +3,4 @@ djangorestframework-simplejwt
 psycopg2-binary 
 markitdown[all]
 requests   
+django-cors-headers
