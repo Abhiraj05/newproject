@@ -1,9 +1,7 @@
 from django.urls import path
-from user.views import UserRegistration,UserLogin,ForgotPassword,SetNewPassword
+from chats.views import ChatBoxForm
 
 urlpatterns = [
-    path('register/',UserRegistration.as_view(),name="user_registration"),
-    path('login/',UserLogin.as_view(),name="user_login"),
-    path('forgot_password/',ForgotPassword.as_view(),name="forgot_password"),
-    path('reset_password/',SetNewPassword.as_view(),name="reset_password")
+    path('user_input/',ChatBoxForm.as_view(),name="user_input"),
+    path('get_chats/',ChatBoxForm.as_view(),name="get_chats"),
 ]

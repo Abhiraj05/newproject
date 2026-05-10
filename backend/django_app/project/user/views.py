@@ -9,7 +9,7 @@ from common.email import send_email
 from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
 from django.utils.encoding import force_bytes
 from django.contrib.auth.tokens import PasswordResetTokenGenerator
-from user.serializers import UserRegisterFormSerializer, ForgotPasswordFormSerializer, SetNewPasswordFormSerializer , UserProfileSerializer
+from user.serializers import UserProfileSerializer,ForgotPasswordSerializer,SetNewPasswordSerializer
 
 
 # Create your views here.
@@ -19,7 +19,7 @@ class UserRegistration(APIView):
     permission_classes = [AllowAny]
 
     def post(self, request, format=None):
-        serializer = UserRegisterFormSerializer(data=request.data)
+        serializer = UserProfileSerializer(data=request.data)
         if serializer.is_valid():
             email = serializer.validated_data['email']
             password = serializer.validated_data['password']
@@ -41,7 +41,7 @@ class UserLogin(APIView):
     permission_classes = [AllowAny]
 
     def post(self, request, format=None):
-        serializer = UserRegisterFormSerializer(data=request.data)
+        serializer = UserProfileSerializer(data=request.data)
         if serializer.is_valid():
             email = serializer.validated_data['email']
             password = serializer.validated_data['password']
@@ -78,7 +78,7 @@ class ForgotPassword(APIView):
     permission_classes = [AllowAny]
 
     def post(self, request, format=None):
-        serializer = ForgotPasswordFormSerializer(data=request.data)
+        serializer = ForgotPasswordSerializer(data=request.data)
         if serializer.is_valid():
             reset_email = request.data.get("email")
             try:
@@ -120,7 +120,7 @@ class SetNewPassword(APIView):
     permission_classes = [AllowAny]
 
     def post(self, request, format=None):
-        serializer = SetNewPasswordFormSerializer(data=request.data)
+        serializer = SetNewPasswordSerializer(data=request.data)
         if serializer.is_valid():
             uid = request.data.get('uid')
             token = request.data.get('token')

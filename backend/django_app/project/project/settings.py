@@ -30,7 +30,7 @@ SECRET_KEY = 'django-insecure-ra)ed@&!zg)p626cie#63h-=1#^m77+fes(hq^_-_yq36o&)vt
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ["http://localhost:5173", "127.0.0.1"]
+ALLOWED_HOSTS = ["localhost", "127.0.0.1"]
 
 
 # Application definition
@@ -42,15 +42,17 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'corsheaders',
     'rest_framework',
     'rest_framework_simplejwt',
     'user',
-    'main',
+    'extractor',
     'lawyer',
     'chats'
 ]
 
 MIDDLEWARE = [
+    'corsheaders.middleware.CorsMiddleware',
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
@@ -140,7 +142,6 @@ USE_TZ = True
 STATIC_URL = 'static/'
 
 
-
 # JWT Authentication
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': (
@@ -168,4 +169,3 @@ SESSION_COOKIE_SECURE = False
 
 CSRF_COOKIE_SAMESITE = "None"
 CSRF_COOKIE_SECURE = False
-

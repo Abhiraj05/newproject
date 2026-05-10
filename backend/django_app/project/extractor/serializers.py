@@ -1,8 +1,8 @@
 from rest_framework import serializers
-from main.models import Document
+from extractor.models import Files
 
 
 class DocumentSerializer(serializers.ModelSerializer):
     class Meta:
-        model = Document
+        model = Files
         fields = ['file']

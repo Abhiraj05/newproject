@@ -106,7 +106,7 @@ const ChatBox = () => {
               ))}
             </nav>
 
-            <a onClick={() => navigate("/profile")}>
+            <a onClick={() => redirect("/profile")}>
               <div className="p-6 border-t border-white/10 flex items-center gap-3">
                 <div className="w-10 h-10 rounded-full bg-amber-400 text-black flex items-center justify-center font-bold">
                   JD
