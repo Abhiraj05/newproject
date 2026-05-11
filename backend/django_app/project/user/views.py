@@ -3,13 +3,13 @@ from django.contrib.auth import authenticate
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework.permissions import AllowAny , IsAuthenticated
-from django.contrib.auth.models import User
+from user.models import User
 from rest_framework_simplejwt.tokens import RefreshToken
 from common.email import send_email
 from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
 from django.utils.encoding import force_bytes
 from django.contrib.auth.tokens import PasswordResetTokenGenerator
-from user.serializers import UserProfileSerializer,ForgotPasswordSerializer,SetNewPasswordSerializer
+from user.serializers import UserProfileSerializer,ForgotPasswordSerializer,SetNewPasswordSerializer,UserRegisterSerializer,UserLoginSerializer
 
 
 # Create your views here.
@@ -19,12 +19,12 @@ class UserRegistration(APIView):
     permission_classes = [AllowAny]
 
     def post(self, request, format=None):
-        serializer = UserProfileSerializer(data=request.data)
+        serializer = UserRegisterSerializer(data=request.data)
         if serializer.is_valid():
             email = serializer.validated_data['email']
             password = serializer.validated_data['password']
 
-            if User(username=email, email=email):
+            if User.objects.filter(email=email).exists():
                 return Response({"message": "user already exist !"}, status=status.HTTP_400_BAD_REQUEST)
 
             else:
@@ -41,13 +41,13 @@ class UserLogin(APIView):
     permission_classes = [AllowAny]
 
     def post(self, request, format=None):
-        serializer = UserProfileSerializer(data=request.data)
+        serializer = UserLoginSerializer(data=request.data)
         if serializer.is_valid():
             email = serializer.validated_data['email']
             password = serializer.validated_data['password']
 
             try:
-                is_exist = User.object.get(username=email)
+                is_exist = User.objects.get(email=email)
 
                 if not is_exist:
                     return Response({"message": "user not found !"}, status=status.HTTP_400_BAD_REQUEST)
@@ -58,7 +58,7 @@ class UserLogin(APIView):
                 if is_authenticated is not None:
                     try:
                         token = RefreshToken.for_user(is_authenticated)
-                        Response(
+                        return Response(
                             {
                                 "message": "login successful !",
                                 "access": str(token.access_token),
@@ -71,6 +71,7 @@ class UserLogin(APIView):
 
             except:
                 return Response({"message": "form submission failed !"}, status=status.HTTP_400_BAD_REQUEST)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
 # generates the reset link email & sends it to user
