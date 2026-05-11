@@ -18,14 +18,16 @@ class ChatBoxForm(APIView):
     def chatbot(self, query):
         try:
             model_response = requests.post("http://127.0.0.1:8001/user_query",
-                                           json={"text": query})
+                                           json={"query_text": query})
+
+            print(model_response.json())
+
             if not model_response:
                 return Response({"message": "request to model failed !"}, status=status.HTTP_400_BAD_REQUEST)
             else:
                 return model_response.json()
         except:
             return Response({"message": "invalid query type !"}, status=status.HTTP_400_BAD_REQUEST)
-
 
 
     # creates new converstion for each user query and bot response
@@ -37,7 +39,7 @@ class ChatBoxForm(APIView):
 
             try:
                 model_response = self.chatbot(user_query)
-
+                print(model_response)
                 if not model_response:
                     return Response({"message": "no response from bot !"}, status=status.HTTP_400_BAD_REQUEST)
                 else:
@@ -65,16 +67,16 @@ class ChatBoxForm(APIView):
                         conversation_id=conversation_obj, sender=user_query, bot=model_response["response"])
 
                     return Response({"message": "conversation created !",
-                                     "conversation_id": conversation_obj.id,
-                                     "bot_id": bot_chat.id,
-                                     "user_query": user_query,
-                                     "bot_response": model_response["response"]
-                                     }, status=status.HTTP_201_CREATED)
+                                    "conversation_id": conversation_obj.id,
+                                    "bot_id": bot_chat.id,
+                                    "user_query": user_query,
+                                    "bot_response": model_response[0]["text"]
+                                    }, status=status.HTTP_201_CREATED)
+
             except:
                 return Response({"message": "no response from bot !"}, status=status.HTTP_400_BAD_REQUEST)
         else:
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-
 
 
     # fetches user conversations
