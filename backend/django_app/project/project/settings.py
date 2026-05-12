@@ -98,7 +98,7 @@ DATABASES = {
         'ENGINE': 'django.db.backends.postgresql',
         'NAME': 'legaladvisor',      # database name
         'USER': 'postgres',          # username
-        'PASSWORD': 'Pr@M@y32635',   # password
+        'PASSWORD': '123456',   # password
         'HOST': 'localhost',         # host
         'PORT': '5432',              # PostgreSQL default port
     }

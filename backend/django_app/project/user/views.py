@@ -166,6 +166,7 @@ class SetNewPassword(APIView):
                 return Response({"message": "invalid password !"}, status=status.HTTP_400_BAD_REQUEST)
 
 
+# updates the user profile
 class EditProfile(APIView):
     permission_classes = [IsAuthenticated]
 
@@ -178,18 +179,19 @@ class EditProfile(APIView):
             phone_no = serializer.validated_data['phone_no']
             gender = serializer.validated_data['gender']
 
-            user = request.user
-            if User.objects.filter(user).exists():
-                user.name = name
-                user.dob = dob
-                user.address = address
-                user.phone_no = phone_no
-                user.gender = gender
+            is_user= User.objects.filter(id=request.user).exists()
+            
+            if not is_user:
+                return Response({"message": "profile not found !"},status=status.HTTP_200_OK)       
+            else:
+                is_user.name = name
+                is_user.dob = dob
+                is_user.address = address
+                is_user.phone_no = phone_no
+                is_user.gender = gender
 
-                user.save()
-                return Response({
-                "message": "Profile updated successfully"
-            })
+                is_user.save()
+                return Response({"message": "profile updated successfully !"},status=status.HTTP_200_OK)
 
         return Response(
             serializer.errors,

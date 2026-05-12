@@ -8,6 +8,7 @@ import Navbar from "../components/others/NavBar";
 import Footer from "../components/others/Footer";
 import Loader from "../components/others/Loader";
 import { useNavigate } from "react-router-dom";
+import {features} from "../data.js"
 import { ShieldCheck, FileText, ArrowRight, CheckCircle2 } from "lucide-react";
 
 const Main = () => {
@@ -22,23 +23,6 @@ const Main = () => {
     }, 1500);
   };
 
-  const features = [
-    {
-      title: "Deep Case Analysis",
-      desc: "Find precedents, risks, and opportunities instantly with AI-powered legal research.",
-      icon: ShieldCheck,
-    },
-    {
-      title: "Contract Review",
-      desc: "Review long agreements in seconds and flag risky clauses automatically.",
-      icon: FileText,
-    },
-    {
-      title: "Compliance Research",
-      desc: "Stay current with regulations across multiple jurisdictions.",
-      icon: CheckCircle2,
-    },
-  ];
 
   return (
     <>

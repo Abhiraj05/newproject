@@ -1,15 +1,14 @@
 from django.db import models
 from django.contrib.auth.models import AbstractUser
 
-
 # Create your models here.
 
-
+# gender choices
 class Gender(models.TextChoices):
     MALE = "male" , "Male"
     FEMALE = "female" , "Female"
 
-
+# user model
 class User(AbstractUser):
     class Role(models.TextChoices):
         USER = "user", "User"

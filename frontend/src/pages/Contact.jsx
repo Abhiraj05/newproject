@@ -17,7 +17,8 @@ const Contact = () => {
 
   const handleChange = (e) => {
     setFormData({
-      ...formData,[e.target.name]: e.target.value,
+      ...formData,
+      [e.target.name]: e.target.value,
     });
   };
 
@@ -25,8 +26,8 @@ const Contact = () => {
     e.preventDefault();
 
     if (!formData.name && !formData.email && !formData.message) {
-      alert("Please fill the details");
-      return
+      alert("please fill the details !");
+      return;
     } else {
       try {
         await axios.post("http://127.0.0.1:8000/api/auth/feedback/", formData);
@@ -37,8 +38,13 @@ const Contact = () => {
         });
 
         setConfirmPassword("");
+
+        alert("feedback submitted successfully !");
+        return;
       } catch (error) {
         console.log(error);
+        alert("feedback submission failed !");
+        return;
       }
     }
   };

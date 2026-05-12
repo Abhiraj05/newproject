@@ -49,12 +49,12 @@ const ProfileEdit = () => {
         !formData.dob &&
         !formData.role &&
         !formData.address) ||
-      !formData.speciality ||
-      !formData.experience ||
-      !formData.fees ||
-      !formData.password
+      (!formData.speciality &&
+        !formData.experience &&
+        !formData.fees &&
+        !formData.password)
     ) {
-      alert("Please fill the details");
+      alert("please fill the details !");
       return;
     } else {
       try {
@@ -76,8 +76,12 @@ const ProfileEdit = () => {
           experience: "",
           fees: "",
         });
+        alert("profile updated successfully !");
+        return;
       } catch (error) {
         console.log(error);
+        alert("failed to updated profile !");
+        return;
       }
     }
   };

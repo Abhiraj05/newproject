@@ -23,18 +23,30 @@ const SignIn = () => {
     e.preventDefault();
 
     if (!formData.email && !formData.password) {
-      alert("Please fill the details");
-      return
+      alert("please fill the details !");
+      return;
     } else {
       try {
-        await axios.post("http://127.0.0.1:8000/api/auth/login/", formData);
+        const response = await axios.post(
+          "http://127.0.0.1:8000/api/auth/login/",
+          formData,
+        );
+
+        localStorage.setItem("access_token", response.data.access);
+        localStorage.setItem("refresh_token", response.data.refresh);
 
         setFormData({
           email: "",
           password: "",
         });
+
+        redirect("/chat");
+        alert("login successful !");
+        return;
       } catch (error) {
         console.log(error);
+        alert("login failed !");
+        return;
       }
     }
   };
