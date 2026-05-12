@@ -23,4 +23,5 @@ urlpatterns = [
     path('api/chats/',include('chats.urls')),
     path('api/lawyer/',include('lawyer.urls')),
     path('api/extractor/',include('extractor.urls')),
+    path('api/feedback/',include('feedback.urls')),
 ]

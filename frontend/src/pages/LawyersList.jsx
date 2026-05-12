@@ -27,7 +27,7 @@ const LawyersList = () => {
       const response = await axios.get(
         "http://127.0.0.1:8000/api/lawyer/get_lawyers/",
       );
-      setDataList(response.data.list)
+      setDataList(response.data.lawyers_list)
     } catch (error) {
       console.log(error);
     }

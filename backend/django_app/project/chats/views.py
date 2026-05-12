@@ -6,6 +6,7 @@ from rest_framework.permissions import IsAuthenticated
 from chats.serializers import UserInputSerializer
 from chats.models import BotChats, Conversations
 from django.utils import timezone
+from user.views import User
 
 # Create your views here.
 
@@ -92,6 +93,7 @@ class GetAllChatConversations(APIView):
         try:
             all_conversation_list = Conversations.objects.filter(
                     user_id=request.user).values("id", "created_at").all().order_by("-id")
+            
             if not all_conversation_list:
                 return Response({"message": "conversations not found !"}, status=status.HTTP_400_BAD_REQUEST)
             else:

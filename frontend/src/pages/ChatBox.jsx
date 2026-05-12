@@ -31,9 +31,11 @@ const ChatBox = () => {
   const [isProcessing, setIsProcessing] = useState(false);
   const [loading, setLoading] = useState(false);
   const [line, setLine] = useState(false);
+  const [userData, setUserData] = useState("");
   const navigate = useNavigate();
   const token = localStorage.getItem("access_token");
   const conversation_id = localStorage.getItem("conversation_id");
+  const username = localStorage.getItem("username");
 
   const handleChange = (e) => {
     setFormData({
@@ -155,7 +157,7 @@ const ChatBox = () => {
           },
         },
       );
-
+      setUserData(response.data.user_data);
       setConversations(response.data.all_conversation_list);
     } catch (error) {
       console.log(error);
@@ -257,7 +259,7 @@ const ChatBox = () => {
                   <div className="flex items-start justify-between gap-3">
                     <div>
                       <h2 className="text-white font-semibold text-lg line-clamp-1">
-                        Document{" "}{chat.id}
+                        Document {chat.id}
                       </h2>
 
                       <p className="text-slate-400 text-sm mt-2 line-clamp-2">
@@ -283,12 +285,12 @@ const ChatBox = () => {
             <div className="pl-4 pb-4 border-t border-white/10">
               {" "}
               <a onClick={() => redirect("/profile")}>
-                <div className="pt-3 flex items-center gap-3">
-                  <div className="w-10 h-10 rounded-full bg-amber-400 text-black flex items-center justify-center font-bold">
-                    {}
+                <div className="pt-3 pl-6 flex items-center gap-3">
+                  <div className="w-10 h-10 rounded-full bg-amber-400 text-black flex items-center justify-center font-bold capitalize">
+                    {username.split("@")[0][0]}
                   </div>
                   <div>
-                    <p className="font-medium">{}</p>
+                    <p className="font-medium">{username.split("@")[0]}</p>
                     <p className="text-xs text-slate-400">{}</p>
                   </div>
                 </div>
@@ -376,15 +378,6 @@ const ChatBox = () => {
 
             <div className="flex-1 overflow-y-auto px-6 py-8">
               <div className="max-w-4xl mx-auto space-y-8">
-                <motion.div
-                  initial={{ opacity: 0, x: 80 }}
-                  animate={{ opacity: 1, x: 0 }}
-                  className="flex justify-end"
-                >
-                  <div className="bg-amber-400 text-black px-5 py-3 rounded-3xl rounded-br-md max-w-xl font-medium">
-                    Can you analyze the attached contract for risk factors?
-                  </div>
-                </motion.div>
                 <motion.div
                   initial={{ opacity: 0, x: -80 }}
                   animate={{ opacity: 1, x: 0 }}
@@ -487,7 +480,7 @@ const ChatBox = () => {
                             <Bot className="w-5 h-5 text-amber-400" />
 
                             <span className="text-sm text-slate-400">
-                              Law Mate AI
+                              Legal Next AI
                             </span>
                           </motion.div>
                         )}

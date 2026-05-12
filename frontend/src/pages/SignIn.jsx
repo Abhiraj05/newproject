@@ -11,6 +11,7 @@ const SignIn = () => {
     email: "",
     password: "",
   });
+  const username = localStorage.getItem("username");
 
   const handleChange = (e) => {
     setFormData({
@@ -31,9 +32,10 @@ const SignIn = () => {
           "http://127.0.0.1:8000/api/auth/login/",
           formData,
         );
-
+       
         localStorage.setItem("access_token", response.data.access);
         localStorage.setItem("refresh_token", response.data.refresh);
+        localStorage.setItem("username", response.data.username);
 
         setFormData({
           email: "",

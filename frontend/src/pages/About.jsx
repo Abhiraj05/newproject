@@ -104,9 +104,9 @@ const About = () => {
 
               <div className="space-y-8 text-slate-400 text-lg leading-8">
                 {[
-                  "Law Mate was built on one belief — modern legal challenges need smarter tools. Traditional research and document review can no longer keep pace with today’s volume and complexity.",
+                  "Legal Next AI was built on one belief — modern legal challenges need smarter tools. Traditional research and document review can no longer keep pace with today’s volume and complexity.",
                   "We saw legal professionals spending countless hours reviewing documents, validating clauses and analyzing risk. AI should not replace lawyers — it should empower them.",
-                  "Today, Law Mate helps firms move faster, work smarter and act with confidence through trusted legal intelligence.",
+                  "Today, Legal Next AI helps firms move faster, work smarter and act with confidence through trusted legal intelligence.",
                 ].map((text, i) => (
                   <motion.p
                     key={i}

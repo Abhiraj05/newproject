@@ -1,10 +1,17 @@
 import { useState } from "react";
 import { Scale, Menu, X } from "lucide-react";
 import GrayButton from "../buttons/GrayButton";
+import YellowButton from "../buttons/YellowButton";
 import Logo from "../../assets/image.png";
 
 const Navbar = ({ navigate }) => {
   const [mobileMenu, setMobileMenu] = useState(false);
+  const username = localStorage.getItem("username");
+
+  const logOut = () => {
+    localStorage.removeItem("username");
+    alert("logout successfully !")
+  };
   return (
     <>
       <header className="sticky top-0 z-50 border-b border-white/10 backdrop-blur bg-linear-to-l from-slate-950 via-slate-900 to-slate-950">
@@ -22,9 +29,32 @@ const Navbar = ({ navigate }) => {
             <a onClick={() => navigate("/contact")}>Contact</a>
           </nav>
           <div className="hidden md:block">
-            <a onClick={() => navigate("/signin")}>
-              <GrayButton className="rounded-2xl" title={"Log in"}></GrayButton>
-            </a>
+            {!username && (
+              <a onClick={() => navigate("/signin")}>
+                <GrayButton
+                  className="rounded-2xl"
+                  title={"Log in"}
+                ></GrayButton>
+              </a>
+            )}
+            {username && (
+              <>
+                <div className="flex flex-row justify-start items-start gap-x-2">
+                  <a onClick={() => navigate("/profile")}>
+                    <YellowButton
+                      className="w-full rounded-2xl"
+                      title={username.split("@")[0]}
+                    />
+                  </a>
+                  <a onClick={() => logOut()}>
+                    <GrayButton
+                      className="w-full rounded-2xl"
+                      title={"Log out"}
+                    />
+                  </a>
+                </div>
+              </>
+            )}
           </div>
           <button
             onClick={() => setMobileMenu(!mobileMenu)}
@@ -37,15 +67,13 @@ const Navbar = ({ navigate }) => {
             )}
           </button>
         </div>
-
-
         <div
           className={`md:hidden fixed top-16 left-0 w-full overflow-hidden transition-all duration-300 z-50 ${
             mobileMenu ? "max-h-96 opacity-100" : "max-h-0 opacity-0"
           }`}
         >
           <div className="px-6 pb-6 pt-2 bg-linear-to-l from-slate-950 via-slate-900 to-slate-950 backdrop-blur-xl border-t border-white/10">
-            <nav className="flex flex-col gap-4  text-slate-300">
+            <nav className="flex flex-col gap-1 text-slate-300">
               <a href="/" className="py-2 hover:text-amber-400 transition">
                 Home
               </a>
@@ -79,9 +107,32 @@ const Navbar = ({ navigate }) => {
               </a>
 
               <div className="pt-4">
-                <a onClick={() => navigate("/signin")}>
-                  <GrayButton className="w-full rounded-2xl" title={"Log in"} />
-                </a>
+                {!username && (
+                  <a onClick={() => navigate("/signin")}>
+                    <GrayButton
+                      className="w-full rounded-2xl"
+                      title={"Log in"}
+                    />
+                  </a>
+                )}
+                {username && (
+                  <>
+                    <div className="flex flex-col justify-start items-start gap-y-5">
+                      <a onClick={() => navigate("/profile")}>
+                        <YellowButton
+                          className="w-full rounded-2xl"
+                          title={username.split("@")[0]}
+                        />
+                      </a>
+                      <a onClick={() => logOut()}>
+                        <GrayButton
+                          className="w-full rounded-2xl"
+                          title={"Log out"}
+                        />
+                      </a>
+                    </div>
+                  </>
+                )}
               </div>
             </nav>
           </div>

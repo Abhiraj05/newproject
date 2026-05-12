@@ -62,7 +62,8 @@ class UserLogin(APIView):
                             {
                                 "message": "login successful !",
                                 "access": str(token.access_token),
-                                "refresh": str(token)
+                                "refresh": str(token),
+                                "username" : is_exist.email
                             }
                         )
                     except:
@@ -111,7 +112,7 @@ class ForgotPassword(APIView):
                 except Exception as e:
                     print(f"Reset email failed: {str(e)}")
 
-                return Response({"message": "reset link generated and sent to your email !"})
+                return Response({"message": "reset link generated and sent to your email !"},status=status.HTTP_201_CREATED)
             except:
                 return Response({"message": "invalid email id !"}, status=status.HTTP_404_NOT_FOUND)
 

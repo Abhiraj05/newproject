@@ -30,7 +30,10 @@ const Contact = () => {
       return;
     } else {
       try {
-        await axios.post("http://127.0.0.1:8000/api/auth/feedback/", formData);
+        const response = await axios.post(
+          "http://127.0.0.1:8000/api/feedback/send_feedback/",
+          formData,
+        );
         setFormData({
           name: "",
           email: "",
