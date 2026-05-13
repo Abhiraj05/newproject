@@ -3,10 +3,10 @@ from rest_framework import status
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated
-from user.models import User
 from chats.serializers import UserInputSerializer
-from lawyer.models import LawyerProfile
 from chats.models import BotChats, Conversations
+from django.utils import timezone
+from user.views import User
 
 # Create your views here.
 
@@ -19,8 +19,6 @@ class ChatBoxForm(APIView):
         try:
             model_response = requests.post("http://127.0.0.1:8001/user_query",
                                            json={"query_text": query})
-
-            print(model_response.json())
 
             if not model_response:
                 return Response({"message": "request to model failed !"}, status=status.HTTP_400_BAD_REQUEST)
@@ -36,43 +34,35 @@ class ChatBoxForm(APIView):
 
         if serializer.is_valid():
             user_query = serializer.validated_data['sender']
-
+            conversation_id = request.data.get('conversation_id')
+         
             try:
                 model_response = self.chatbot(user_query)
-                print(model_response)
+                
                 if not model_response:
                     return Response({"message": "no response from bot !"}, status=status.HTTP_400_BAD_REQUEST)
                 else:
-                    # user_obj = User.objects.filter(
-                    #     id=request.user.id).first()
-
-                    # if not user_obj:
-                    #     return Response({"message": "user not found !"}, status=status.HTTP_400_BAD_REQUEST)
-
-                    user_profile = User.objects.filter(
-                        user=request.user.id).first()
-
-                    lawyer_profile = LawyerProfile.objects.filter(
-                        user=request.user.id).first()
-
-                    if not user_profile and not lawyer_profile:
-                        return Response({"message": "user not found !"}, status=status.HTTP_400_BAD_REQUEST)
-
-                    profile = user_profile if user_profile else lawyer_profile
-
-                    conversation_obj = Conversations.objects.create(
-                        user=profile)
-
+                    if Conversations.objects.filter(id=conversation_id).exists():
+                        pass
+                    else:
+                        conversation_obj = Conversations.objects.create(
+                            user=request.user,created_at=timezone.now())
+                    
+                    if conversation_id is None:
+                        previous_conversation_id=conversation_obj
+                    else:
+                        previous_conversation_obj=Conversations.objects.filter(id=conversation_id).first()
+                        previous_conversation_id=previous_conversation_obj
+              
                     bot_chat = BotChats.objects.create(
-                        conversation_id=conversation_obj, sender=user_query, bot=model_response["response"])
-
+                            conversation=previous_conversation_id, sender=user_query, bot=model_response[0]["text"],created_at=timezone.now())
+       
                     return Response({"message": "conversation created !",
-                                    "conversation_id": conversation_obj.id,
+                                    "conversation_id": previous_conversation_id.id,
                                     "bot_id": bot_chat.id,
                                     "user_query": user_query,
                                     "bot_response": model_response[0]["text"]
                                     }, status=status.HTTP_201_CREATED)
-
             except:
                 return Response({"message": "no response from bot !"}, status=status.HTTP_400_BAD_REQUEST)
         else:
@@ -81,13 +71,35 @@ class ChatBoxForm(APIView):
 
     # fetches user conversations
     def get(self, request, format=None):
-        conversation_id = request.data.get("conversation_id")
+        conversation_id = request.GET.get("conversation_id")
+        
         try:
             conversation_list = BotChats.objects.filter(
-                conversation_id=conversation_id).values("sender", "bot", "created_at").all()
+                conversation_id=conversation_id).values("sender", "bot", "created_at").all().order_by("created_at")
             if not conversation_list:
                 return Response({"message": "conversation not found !"}, status=status.HTTP_400_BAD_REQUEST)
             else:
                 return Response({"conversation_list": conversation_list}, status=status.HTTP_200_OK)
         except:
             return Response({"message": "failed to extract conversation !"}, status=status.HTTP_400_BAD_REQUEST)
+
+
+
+# fetches all conversations of user and sends it to frontend
+class GetAllChatConversations(APIView):
+    
+    # fetches all conversations of user 
+    def get(self, request, format=None): 
+        try:
+            all_conversation_list = Conversations.objects.filter(
+                    user_id=request.user).values("id", "created_at").all().order_by("-id")
+            
+            if not all_conversation_list:
+                return Response({"message": "conversations not found !"}, status=status.HTTP_400_BAD_REQUEST)
+            else:
+                return Response({"all_conversation_list": all_conversation_list}, status=status.HTTP_200_OK)
+        except:
+                return Response({"message": "failed to extract conversations !"}, status=status.HTTP_400_BAD_REQUEST)
+
+
+        

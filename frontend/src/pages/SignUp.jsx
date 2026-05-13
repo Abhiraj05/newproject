@@ -25,27 +25,31 @@ const SignUp = () => {
     e.preventDefault();
 
     if (!formData.email && !formData.password && !confirmPassword) {
-      alert("Please fill the details");
-      return
+      alert("please fill the details");
+      return;
     }
     if (formData.password !== confirmPassword) {
-      alert("Password doesn't match");
-      return
-    }
-    else{
-    try {
-      await axios.post("http://127.0.0.1:8000/api/auth/register/", formData);
+      alert("password doesn't match !");
+      return;
+    } else {
+      try {
+        await axios.post("http://127.0.0.1:8000/api/auth/register/", formData);
 
-      setFormData({
-        email: "",
-        password: "",
-      });
+        setFormData({
+          email: "",
+          password: "",
+        });
 
-      setConfirmPassword("");
-    } catch (error) {
-      console.log(error);
+        setConfirmPassword("");
+        alert("signup successful !");
+        return;
+      } catch (error) {
+        console.log(error);
+        alert("signup failed !");
+        return;
+      }
     }
-  };}
+  };
 
   const redirect = (url) => {
     setLoader(true);

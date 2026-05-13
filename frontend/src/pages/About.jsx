@@ -1,34 +1,13 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { motion } from "motion/react";
-import {
-  Shield,
-  Sparkles,
-  BadgeCheck,
-} from "lucide-react";
 import Card from "../components/cards/Card";
 import CardContent from "../components/cards/CardContent";
 import Loader from "../components/others/Loader";
 import Footer from "../components/others/Footer";
 import NavBar from "../components/others/NavBar";
+import { values } from "../data";
 
-const values = [
-  {
-    title: "Integrity",
-    desc: "Built on privacy, discretion and trusted client confidentiality.",
-    icon: Shield,
-  },
-  {
-    title: "Innovation",
-    desc: "Modern AI systems designed for advanced legal reasoning.",
-    icon: Sparkles,
-  },
-  {
-    title: "Accuracy",
-    desc: "Every insight is structured for reliability and precision.",
-    icon: BadgeCheck,
-  },
-];
 
 const About = () => {
   const navigate = useNavigate();
@@ -104,9 +83,9 @@ const About = () => {
 
               <div className="space-y-8 text-slate-400 text-lg leading-8">
                 {[
-                  "Law Mate was built on one belief — modern legal challenges need smarter tools. Traditional research and document review can no longer keep pace with today’s volume and complexity.",
+                  "Legal Next AI was built on one belief — modern legal challenges need smarter tools. Traditional research and document review can no longer keep pace with today’s volume and complexity.",
                   "We saw legal professionals spending countless hours reviewing documents, validating clauses and analyzing risk. AI should not replace lawyers — it should empower them.",
-                  "Today, Law Mate helps firms move faster, work smarter and act with confidence through trusted legal intelligence.",
+                  "Today, Legal Next AI helps firms move faster, work smarter and act with confidence through trusted legal intelligence.",
                 ].map((text, i) => (
                   <motion.p
                     key={i}

@@ -20,12 +20,12 @@ const ResetPassword = () => {
     e.preventDefault();
 
     if (!formData.new_password && !confirmPassword) {
-      alert("Please fill the details");
-      return
+      alert("please fill the details !");
+      return;
     }
     if (formData.new_password !== confirmPassword) {
-      alert("Password doesn't match");
-      return
+      alert("password doesn't match !");
+      return;
     } else {
       try {
         await axios.post(
@@ -37,8 +37,13 @@ const ResetPassword = () => {
           password: "",
         });
         setConfirmPassword("");
+
+        alert("password reset successfully !");
+        return;
       } catch (error) {
         console.log(error);
+        alert("password reset failed !");
+        return;
       }
     }
   };

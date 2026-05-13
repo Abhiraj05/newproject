@@ -2,14 +2,15 @@ from rest_framework import status
 from django.contrib.auth import authenticate
 from rest_framework.views import APIView
 from rest_framework.response import Response
-from rest_framework.permissions import AllowAny , IsAuthenticated
+from rest_framework.permissions import AllowAny, IsAuthenticated
 from user.models import User
+from lawyer.models import LawyerProfile
 from rest_framework_simplejwt.tokens import RefreshToken
 from common.email import send_email
 from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
 from django.utils.encoding import force_bytes
 from django.contrib.auth.tokens import PasswordResetTokenGenerator
-from user.serializers import UserProfileSerializer,ForgotPasswordSerializer,SetNewPasswordSerializer,UserRegisterSerializer,UserLoginSerializer
+from user.serializers import UserProfileSerializer, ForgotPasswordSerializer, SetNewPasswordSerializer, UserRegisterSerializer, UserLoginSerializer
 
 
 # Create your views here.
@@ -32,8 +33,8 @@ class UserRegistration(APIView):
                 user_obj.set_password(password)
                 user_obj.save()
                 return Response({"message": "user register successfully !"}, status=status.HTTP_201_CREATED)
-
-        return Response({"message": "form submission failed !"}, status=status.HTTP_400_BAD_REQUEST)
+        else:
+            return Response({"message": "form submission failed !"}, status=status.HTTP_400_BAD_REQUEST)
 
 
 # authenticate & logins the user
@@ -62,7 +63,8 @@ class UserLogin(APIView):
                             {
                                 "message": "login successful !",
                                 "access": str(token.access_token),
-                                "refresh": str(token)
+                                "refresh": str(token),
+                                "username": is_exist.email
                             }
                         )
                     except:
@@ -71,7 +73,8 @@ class UserLogin(APIView):
 
             except:
                 return Response({"message": "form submission failed !"}, status=status.HTTP_400_BAD_REQUEST)
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+        else:
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
 # generates the reset link email & sends it to user
@@ -111,9 +114,11 @@ class ForgotPassword(APIView):
                 except Exception as e:
                     print(f"Reset email failed: {str(e)}")
 
-                return Response({"message": "reset link generated and sent to your email !"})
+                return Response({"message": "reset link generated and sent to your email !"}, status=status.HTTP_201_CREATED)
             except:
                 return Response({"message": "invalid email id !"}, status=status.HTTP_404_NOT_FOUND)
+        else:
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
 # sets the new password in database
@@ -164,34 +169,96 @@ class SetNewPassword(APIView):
                     return Response({"message": "invalid or expired token !"}, status=status.HTTP_400_BAD_REQUEST)
             except:
                 return Response({"message": "invalid password !"}, status=status.HTTP_400_BAD_REQUEST)
+        else:
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
+# updates the user profile
 class EditProfile(APIView):
     permission_classes = [IsAuthenticated]
 
-    def post(self , request, format=None):
-        serializer = UserProfileSerializer(data=request.data)
+    # fetches user profile details
+    def get(self, request, format=None):
+        try:
+            is_user = User.objects.filter(id=request.user.id).first()
+            is_lawyer = LawyerProfile.objects.filter(
+                user_id=request.user.id).first()
+
+            if not is_user:
+                return Response({"message": "profile not found !"}, status=status.HTTP_400_BAD_REQUEST)
+            else:
+                if is_user and is_lawyer:
+                    return Response({"user_data": {
+                        "name": is_user.name,
+                        "email": is_user.email,
+                        "gender": is_user.gender,
+                        "dob": is_user.dob,
+                        "role": is_user.role,
+                        "phone_no": is_user.phone_no,
+                        "address": is_user.address,
+                        "speciality": is_lawyer.speciality,
+                        "experience": is_lawyer.experience,
+                        "fees": is_lawyer.fees
+                    }}, status=status.HTTP_200_OK)
+                else:
+                    return Response({"user_data": {
+                        "name": is_user.name,
+                        "email": is_user.email,
+                        "gender": is_user.gender,
+                        "dob": is_user.dob,
+                        "role": is_user.role,
+                        "phone_no": is_user.phone_no,
+                        "address": is_user.address
+                    }}, status=status.HTTP_200_OK)
+        except:
+            return Response({"message": "failed to extract profile !"}, status=status.HTTP_400_BAD_REQUEST)
+
+    # updates the user profile details
+    def put(self, request, format=None):
+        serializer = UserProfileSerializer(
+            request.user, data=request.data, partial=True)
+
         if serializer.is_valid():
             name = serializer.validated_data['name']
-            dob = serializer.validated_data['dob']
-            address = serializer.validated_data['address']
-            phone_no = serializer.validated_data['phone_no']
+            email = serializer.validated_data['email']
             gender = serializer.validated_data['gender']
+            dob = serializer.validated_data['dob']
+            role = serializer.validated_data['role']
+            phone_no = serializer.validated_data['phone_no']
+            address = serializer.validated_data['address']
+            speciality = request.data.get("speciality")
+            experience = request.data.get("experience")
+            fees = request.data.get("fees")
 
-            user = request.user
-            if User.objects.filter(user).exists():
-                user.name = name
-                user.dob = dob
-                user.address = address
-                user.phone_no = phone_no
-                user.gender = gender
+            try:
+                is_user = User.objects.filter(id=request.user.id).first()
 
-                user.save()
-                return Response({
-                "message": "Profile updated successfully"
-            })
+                if not is_user:
+                    return Response({"message": "profile not found !"}, status=status.HTTP_400_BAD_REQUEST)
+                else:
+                    is_user.name = name
+                    is_user.email = email
+                    is_user.gender = gender
+                    is_user.dob = dob
+                    is_user.role = role
+                    is_user.phone_no = phone_no
+                    is_user.address = address
+                    is_user.save()
 
-        return Response(
-            serializer.errors,
-            status=status.HTTP_400_BAD_REQUEST
-        )
+                is_lawyer = LawyerProfile.objects.filter(
+                    user=request.user).first()
+
+                if is_lawyer is None and speciality is not None and fees is not None and experience is not None:
+                    LawyerProfile.objects.create(
+                        user=is_user, fees=fees, speciality=speciality, experience=experience)
+                else:
+                    is_lawyer.speciality = speciality
+                    is_lawyer.experience = experience
+                    is_lawyer.fees = fees
+                    is_lawyer.save()
+
+                return Response({"message": "profile updated successfully !"}, status=status.HTTP_200_OK)
+            except:
+                return Response({"message": "profile updatedation failed !"}, status=status.HTTP_400_BAD_REQUEST)
+        else:
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
