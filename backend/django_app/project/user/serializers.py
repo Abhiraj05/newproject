@@ -44,8 +44,10 @@ class UserProfileSerializer(serializers.ModelSerializer):
 
         fields = [
             "name",
+            "email",
+            "gender",
+            "dob",
+            "role",
             "phone_no",
             "address",
-            "gender",
-            "dob"
         ]

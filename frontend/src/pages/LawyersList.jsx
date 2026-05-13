@@ -10,6 +10,8 @@ import Loader from "../components/others/Loader";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import { Search, Filter, Mail } from "lucide-react";
+import {data} from "../data.js"
+import "../App.css";
 
 
 
@@ -27,7 +29,8 @@ const LawyersList = () => {
       const response = await axios.get(
         "http://127.0.0.1:8000/api/lawyer/get_lawyers/",
       );
-      setDataList(response.data.lawyers_list)
+      // setDataList(response.data.lawyers_list)
+      setDataList(data)
     } catch (error) {
       console.log(error);
     }
@@ -157,7 +160,7 @@ const LawyersList = () => {
             </div>
           </section>
 
-          <section className="max-w-7xl mx-auto px-6 pb-24">
+          {/* <section className="max-w-7xl mx-auto px-6 pb-24">
             <motion.div
               initial={{ opacity: 0, y: 60 }}
               whileInView={{ opacity: 1, y: 0 }}
@@ -181,7 +184,7 @@ const LawyersList = () => {
                 />
               </motion.div>
             </motion.div>
-          </section>
+          </section> */}
 
           <Footer />
         </div>

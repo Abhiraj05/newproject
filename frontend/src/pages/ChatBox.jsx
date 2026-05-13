@@ -15,6 +15,7 @@ import {
 import Loader from "../components/others/Loader";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
+import "../App.css";
 
 const ChatBox = () => {
   const [showLoader, setLoader] = useState(false);
@@ -219,7 +220,7 @@ const ChatBox = () => {
       {showLoader && <Loader />}
 
       {!showLoader && (
-        <div className="h-screen bg-linear-to-l from-slate-950 via-slate-900 to-slate-950 text-white flex overflow-hidden font-[Inter]">
+        <div className="h-screen bg-linear-to-l from-slate-950 via-slate-900 to-slate-950 text-white flex overflow-hidden font-[Inter] ">
           <motion.aside
             initial={{ x: -80, opacity: 0 }}
             animate={{ x: 0, opacity: 1 }}
@@ -241,7 +242,7 @@ const ChatBox = () => {
               </motion.button>
             </div>
 
-            <div className="flex-1 overflow-y-auto p-4 space-y-4">
+            <div className="flex-1 overflow-y-auto p-4 space-y-4  no-scrollbar">
               {conversations.map((chat) => (
                 <motion.div
                   key={chat.id}
@@ -302,7 +303,7 @@ const ChatBox = () => {
             <motion.header
               initial={{ y: -40, opacity: 0 }}
               animate={{ y: 0, opacity: 1 }}
-              className="h-16 border-b border-white/10 px-6 flex items-center justify-between bg-linear-to-l from-slate-950 via-slate-900 to-slate-950 backdrop-blur"
+              className="relative h-16 border-b border-white/10 px-6 flex items-center justify-between bg-linear-to-l from-slate-950 via-slate-900 to-slate-950 backdrop-blur"
             >
               <div className="flex items-center gap-3">
                 <button
@@ -319,225 +320,258 @@ const ChatBox = () => {
                   <img className="w-35" src={Logo} alt="" />
                 </div>
               </div>
-
-              <Search className="w-5 h-5 text-slate-400" />
               <div
-                className={`md:hidden fixed top-16 left-0 w-full overflow-hidden transition-all duration-300 z-50 border-b border-white/50 ${
-                  mobileMenu ? "max-h-96 opacity-100" : "max-h-0 opacity-0"
+                className={`md:hidden absolute top-16 left-0 w-full h-[calc(100vh-4rem)] overflow-y-auto  no-scrollbar transition-all duration-300 z-50 border-b border-white/50 ${
+                  mobileMenu
+                    ? "opacity-100 pointer-events-auto"
+                    : "opacity-0 pointer-events-none"
                 }`}
               >
                 <div className="px-6 pb-6 pt-2 bg-linear-to-l from-slate-950 via-slate-900 to-slate-950 backdrop-blur-xl border-t border-white/10">
                   <nav className="flex flex-col gap-4  text-slate-300">
-                    <a href="" className="py-2 hover:text-amber-400 transition">
-                      Chat History
-                    </a>
+                    <div className="p-5 border-b border-white/10 sticky top-0 bg-slate-950 z-10">
+                      <h1 className="text-2xl font-bold text-white mb-3">
+                        Chat History
+                      </h1>
 
-                    <a
-                      onClick={() => navigate("")}
-                      className="py-2 hover:text-amber-400 transition cursor-pointer"
-                    >
-                      Case History
-                    </a>
+                      <motion.button
+                        whileHover={{ scale: 1.02 }}
+                        whileTap={{ scale: 0.98 }}
+                        className="w-full bg-amber-400 hover:bg-amber-300 text-black font-semibold py-3 rounded-2xl"
+                        onClick={() => clearConversationId()}
+                      >
+                        + New Conversation
+                      </motion.button>
+                    </div>
 
-                    <a
-                      onClick={() => navigate("")}
-                      className="py-2 hover:text-amber-400 transition cursor-pointer"
-                    >
-                      Brief Analysis
-                    </a>
+                    <div className="flex-1 overflow-y-auto p-4 space-y-4 no-scrollbar">
+                      {conversations.map((chat) => (
+                        <motion.div
+                          key={chat.id}
+                          onClick={() => {
+                            localStorage.setItem("conversation_id", chat.id);
+                            fetchData(chat.id);
+                          }}
+                          whileHover={{
+                            scale: 1.02,
+                            x: 4,
+                          }}
+                          whileTap={{ scale: 0.98 }}
+                          className="group bg-white/5 hover:bg-white/10 transition-all duration-300 border border-white/10 rounded-3xl p-4 cursor-pointer"
+                        >
+                          <div className="flex items-start justify-between gap-3">
+                            <div>
+                              <h2 className="text-white font-semibold text-lg line-clamp-1">
+                                Document {chat.id}
+                              </h2>
 
-                    <a
-                      onClick={() => navigate("=")}
-                      className="py-2 hover:text-amber-400 transition cursor-pointer"
-                    >
-                      Documents
-                    </a>
+                              <p className="text-slate-400 text-sm mt-2 line-clamp-2">
+                                {chat.bot}
+                              </p>
+                            </div>
 
-                    <a
-                      onClick={() => redirect("/contact")}
-                      className="py-2 hover:text-amber-400 transition cursor-pointer"
-                    >
-                      Settings
-                    </a>
-                    <a onClick={() => redirect("/profile")}>
-                      <div className="pt-3 flex items-center gap-3">
-                        <div className="w-10 h-10 rounded-full bg-amber-400 text-black flex items-center justify-center font-bold">
-                          JD
+                            <div className="w-3 h-3 rounded-full bg-amber-400 mt-2 opacity-0 group-hover:opacity-100 transition" />
+                          </div>
+
+                          <div className="flex items-center justify-between mt-4">
+                            <span className="text-xs text-slate-500">
+                              {chat.created_at}
+                            </span>
+
+                            <button className="text-xs bg-amber-400 text-black px-3 py-1 rounded-xl font-medium">
+                              Open
+                            </button>
+                          </div>
+                        </motion.div>
+                      ))}
+                    </div>
+                    <div className="pl-4 pb-4 border-t border-white/10">
+                      {" "}
+                      <a onClick={() => redirect("/profile")}>
+                        <div className="pt-3 pl-6 flex items-center gap-3">
+                          <div className="w-10 h-10 rounded-full bg-amber-400 text-black flex items-center justify-center font-bold capitalize">
+                            {username.split("@")[0][0]}
+                          </div>
+                          <div>
+                            <p className="font-medium">
+                              {username.split("@")[0]}
+                            </p>
+                            <p className="text-xs text-slate-400">{}</p>
+                          </div>
                         </div>
-
-                        <div>
-                          <p className="font-medium">John Doe</p>
-                          <p className="text-xs text-slate-400">Advocate</p>
-                        </div>
-                      </div>
-                    </a>
+                      </a>
+                    </div>
                   </nav>
                 </div>
               </div>
             </motion.header>
 
-            <div className="flex-1 overflow-y-auto px-6 py-8">
-              <div className="max-w-4xl mx-auto space-y-8">
-                <motion.div
-                  initial={{ opacity: 0, x: -80 }}
-                  animate={{ opacity: 1, x: 0 }}
-                >
-                  <div className="flex items-center gap-2 mb-2">
-                    <Bot className="w-5 h-5 text-amber-400" />
-                    <span className="text-sm text-slate-400">
-                      Legal Next AI
-                    </span>
-                  </div>
-
-                  <div className="bg-white text-black max-w-xl rounded-3xl rounded-tl-md p-5">
-                    <div className="mb-5">
-                      Please upload the document and I’ll begin the risk
-                      assessment immediately.
-                    </div>
-                    <motion.label
-                      whileHover={{ scale: 1.05 }}
-                      className="flex items-center gap-2 border border-slate-950 px-3 py-2 rounded-xl cursor-pointer w-fit"
-                    >
-                      <Paperclip className="w-5 h-5 text-slate-950" />
-
-                      <span className="text-sm text-slate-950">
-                        {textData.file ? textData.file.name : "Choose File"}
+            {!mobileMenu && (
+              <div className="flex-1 overflow-y-auto px-6 py-8 no-scrollbar">
+                <div className="max-w-4xl mx-auto space-y-8">
+                  <motion.div
+                    initial={{ opacity: 0, x: -80 }}
+                    animate={{ opacity: 1, x: 0 }}
+                  >
+                    <div className="flex items-center gap-2 mb-2">
+                      <Bot className="w-5 h-5 text-amber-400" />
+                      <span className="text-sm text-slate-400">
+                        Legal Next AI
                       </span>
-                      <form onSubmit={handelFileSubmit}>
-                        <input
-                          type="file"
-                          name="file"
-                          onChange={handleFileChange}
-                          className="hidden"
-                        />
-                        <motion.button
-                          type="submit"
-                          whileHover={{ scale: 1.1 }}
-                          className="bg-slate-950 text-gray-300 p-3 rounded-2xl"
-                        >
-                          <Upload className="w-4 h-4" />
-                        </motion.button>
-                      </form>
-                    </motion.label>
-                    {line && (
-                      <div className="mt-4">
-                        <span className="text-sm text-slate-950">
-                          {isProcessing
-                            ? "Processing document..."
-                            : "Ready for chat"}
-                        </span>
-                      </div>
-                    )}
-                  </div>
-                </motion.div>
+                    </div>
 
-                <div className="space-y-6">
-                  {chatHistory.map((msg, index) => (
-                    <motion.div
-                      key={index}
-                      initial={{
-                        opacity: 0,
-                        y: 20,
-                        scale: 0.95,
-                        x: msg.sender === "user" ? 60 : -60,
-                      }}
-                      animate={{
-                        opacity: 1,
-                        y: 0,
-                        scale: 1,
-                        x: 0,
-                      }}
-                      transition={{
-                        type: "spring",
-                        stiffness: 120,
-                        damping: 14,
-                        delay: index * 0.05,
-                      }}
-                      whileHover={{
-                        scale: 1.01,
-                      }}
-                      className={`flex ${
-                        msg.sender === "user" ? "justify-end" : "justify-start"
-                      }`}
-                    >
+                    <div className="bg-white text-black max-w-xl rounded-3xl rounded-tl-md p-5">
+                      <div className="mb-5">
+                        Please upload the document and I’ll begin the risk
+                        assessment immediately.
+                      </div>
+                      <motion.label
+                        whileHover={{ scale: 1.05 }}
+                        className="flex items-center gap-2 border border-slate-950 px-3 py-2 rounded-xl cursor-pointer w-fit"
+                      >
+                        <Paperclip className="w-5 h-5 text-slate-950" />
+
+                        <span className="text-sm text-slate-950">
+                          {textData.file ? textData.file.name : "Choose File"}
+                        </span>
+                        <form onSubmit={handelFileSubmit}>
+                          <input
+                            type="file"
+                            name="file"
+                            onChange={handleFileChange}
+                            className="hidden"
+                          />
+                          <motion.button
+                            type="submit"
+                            whileHover={{ scale: 1.1 }}
+                            className="bg-slate-950 text-gray-300 p-3 rounded-2xl"
+                          >
+                            <Upload className="w-4 h-4" />
+                          </motion.button>
+                        </form>
+                      </motion.label>
+                      {line && (
+                        <div className="mt-4">
+                          <span className="text-sm text-slate-950">
+                            {isProcessing
+                              ? "Processing document..."
+                              : "Ready for chat"}
+                          </span>
+                        </div>
+                      )}
+                    </div>
+                  </motion.div>
+
+                  <div className="space-y-6">
+                    {chatHistory.map((msg, index) => (
+                      <motion.div
+                        key={index}
+                        initial={{
+                          opacity: 0,
+                          y: 20,
+                          scale: 0.95,
+                          x: msg.sender === "user" ? 60 : -60,
+                        }}
+                        animate={{
+                          opacity: 1,
+                          y: 0,
+                          scale: 1,
+                          x: 0,
+                        }}
+                        transition={{
+                          type: "spring",
+                          stiffness: 120,
+                          damping: 14,
+                          delay: index * 0.05,
+                        }}
+                        whileHover={{
+                          scale: 1.01,
+                        }}
+                        className={`flex ${
+                          msg.sender === "user"
+                            ? "justify-end"
+                            : "justify-start"
+                        }`}
+                      >
+                        <motion.div
+                          initial={{ opacity: 0 }}
+                          animate={{ opacity: 1 }}
+                          transition={{ delay: 0.1 }}
+                          className={`max-w-2xl rounded-3xl p-5 shadow-xl backdrop-blur-sm ${
+                            msg.sender === "user"
+                              ? "bg-white/10 border border-white/10 text-white"
+                              : "bg-white text-black"
+                          }`}
+                        >
+                          {msg.sender === "bot" && (
+                            <motion.div
+                              initial={{ opacity: 0, y: -5 }}
+                              animate={{ opacity: 1, y: 0 }}
+                              transition={{ delay: 0.15 }}
+                              className="flex items-center gap-2 mb-2"
+                            >
+                              <Bot className="w-5 h-5 text-amber-400" />
+
+                              <span className="text-sm text-slate-400">
+                                Legal Next AI
+                              </span>
+                            </motion.div>
+                          )}
+
+                          <motion.p
+                            initial={{ opacity: 0 }}
+                            animate={{ opacity: 1 }}
+                            transition={{ delay: 0.2 }}
+                            className="leading-relaxed"
+                          >
+                            {msg.message}
+                          </motion.p>
+                        </motion.div>
+                      </motion.div>
+                    ))}
+
+                    {loading && (
                       <motion.div
                         initial={{ opacity: 0 }}
                         animate={{ opacity: 1 }}
-                        transition={{ delay: 0.1 }}
-                        className={`max-w-2xl rounded-3xl p-5 shadow-xl backdrop-blur-sm ${
-                          msg.sender === "user"
-                            ? "bg-white/10 border border-white/10 text-white"
-                            : "bg-white text-black"
-                        }`}
+                        className="flex justify-start"
                       >
-                        {msg.sender === "bot" && (
+                        <div className="bg-white text-black rounded-3xl p-4 flex gap-2">
                           <motion.div
-                            initial={{ opacity: 0, y: -5 }}
-                            animate={{ opacity: 1, y: 0 }}
-                            transition={{ delay: 0.15 }}
-                            className="flex items-center gap-2 mb-2"
-                          >
-                            <Bot className="w-5 h-5 text-amber-400" />
+                            animate={{ y: [0, -5, 0] }}
+                            transition={{
+                              repeat: Infinity,
+                              duration: 0.6,
+                            }}
+                            className="w-2 h-2 bg-black rounded-full"
+                          />
 
-                            <span className="text-sm text-slate-400">
-                              Legal Next AI
-                            </span>
-                          </motion.div>
-                        )}
+                          <motion.div
+                            animate={{ y: [0, -5, 0] }}
+                            transition={{
+                              repeat: Infinity,
+                              duration: 0.6,
+                              delay: 0.1,
+                            }}
+                            className="w-2 h-2 bg-black rounded-full"
+                          />
 
-                        <motion.p
-                          initial={{ opacity: 0 }}
-                          animate={{ opacity: 1 }}
-                          transition={{ delay: 0.2 }}
-                          className="leading-relaxed"
-                        >
-                          {msg.message}
-                        </motion.p>
+                          <motion.div
+                            animate={{ y: [0, -5, 0] }}
+                            transition={{
+                              repeat: Infinity,
+                              duration: 0.6,
+                              delay: 0.2,
+                            }}
+                            className="w-2 h-2 bg-black rounded-full"
+                          />
+                        </div>
                       </motion.div>
-                    </motion.div>
-                  ))}
-
-                  {loading && (
-                    <motion.div
-                      initial={{ opacity: 0 }}
-                      animate={{ opacity: 1 }}
-                      className="flex justify-start"
-                    >
-                      <div className="bg-white text-black rounded-3xl p-4 flex gap-2">
-                        <motion.div
-                          animate={{ y: [0, -5, 0] }}
-                          transition={{
-                            repeat: Infinity,
-                            duration: 0.6,
-                          }}
-                          className="w-2 h-2 bg-black rounded-full"
-                        />
-
-                        <motion.div
-                          animate={{ y: [0, -5, 0] }}
-                          transition={{
-                            repeat: Infinity,
-                            duration: 0.6,
-                            delay: 0.1,
-                          }}
-                          className="w-2 h-2 bg-black rounded-full"
-                        />
-
-                        <motion.div
-                          animate={{ y: [0, -5, 0] }}
-                          transition={{
-                            repeat: Infinity,
-                            duration: 0.6,
-                            delay: 0.2,
-                          }}
-                          className="w-2 h-2 bg-black rounded-full"
-                        />
-                      </div>
-                    </motion.div>
-                  )}
+                    )}
+                  </div>
                 </div>
               </div>
-            </div>
+            )}
 
             <motion.footer
               initial={{ y: 40, opacity: 0 }}
@@ -567,11 +601,6 @@ const ChatBox = () => {
                     >
                       <Send className="w-4 h-4" />
                     </motion.button>
-                  </div>
-
-                  <div className="mt-3 flex justify-between text-xs text-slate-500">
-                    <span>Confidential Session</span>
-                    <span>AI Online</span>
                   </div>
                 </div>
               </form>

@@ -10,6 +10,7 @@ import Loader from "../components/others/Loader";
 import { useNavigate } from "react-router-dom";
 import { features } from "../data.js";
 import { ShieldCheck, FileText, ArrowRight, CheckCircle2 } from "lucide-react";
+import "../App.css";
 
 const Main = () => {
   const navigate = useNavigate();

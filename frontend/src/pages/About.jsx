@@ -1,34 +1,13 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { motion } from "motion/react";
-import {
-  Shield,
-  Sparkles,
-  BadgeCheck,
-} from "lucide-react";
 import Card from "../components/cards/Card";
 import CardContent from "../components/cards/CardContent";
 import Loader from "../components/others/Loader";
 import Footer from "../components/others/Footer";
 import NavBar from "../components/others/NavBar";
+import { values } from "../data";
 
-const values = [
-  {
-    title: "Integrity",
-    desc: "Built on privacy, discretion and trusted client confidentiality.",
-    icon: Shield,
-  },
-  {
-    title: "Innovation",
-    desc: "Modern AI systems designed for advanced legal reasoning.",
-    icon: Sparkles,
-  },
-  {
-    title: "Accuracy",
-    desc: "Every insight is structured for reliability and precision.",
-    icon: BadgeCheck,
-  },
-];
 
 const About = () => {
   const navigate = useNavigate();

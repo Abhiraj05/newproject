@@ -1,25 +1,29 @@
-import { ShieldCheck, FileText, ArrowRight, CheckCircle2 } from "lucide-react";
- 
- export const features = [
-    {
-      title: "Deep Case Analysis",
-      desc: "Find precedents, risks, and opportunities instantly with AI-powered legal research.",
-      icon: ShieldCheck,
-    },
-    {
-      title: "Contract Review",
-      desc: "Review long agreements in seconds and flag risky clauses automatically.",
-      icon: FileText,
-    },
-    {
-      title: "Compliance Research",
-      desc: "Stay current with regulations across multiple jurisdictions.",
-      icon: CheckCircle2,
-    },
-  ];
+import {
+  ShieldCheck, FileText, ArrowRight, CheckCircle2, Shield,
+  Sparkles,
+  BadgeCheck
+} from "lucide-react";
+
+export const features = [
+  {
+    title: "Deep Case Analysis",
+    desc: "Find precedents, risks, and opportunities instantly with AI-powered legal research.",
+    icon: ShieldCheck,
+  },
+  {
+    title: "Contract Review",
+    desc: "Review long agreements in seconds and flag risky clauses automatically.",
+    icon: FileText,
+  },
+  {
+    title: "Compliance Research",
+    desc: "Stay current with regulations across multiple jurisdictions.",
+    icon: CheckCircle2,
+  },
+];
 
 
-export const data=[
+export const data = [
   {
     "name": "Julianne Vance",
     "role": "Senior Partner, Litigation",
@@ -82,5 +86,23 @@ export const data=[
     "status": "Verified",
     "tags": ["Environmental Policy", "Sustainability", "Regulation"],
     "image": "https://images.unsplash.com/photo-1487412720507-e7ab37603c6f",
+  },
+];
+
+export const values = [
+  {
+    title: "Integrity",
+    desc: "Built on privacy, discretion and trusted client confidentiality.",
+    icon: Shield,
+  },
+  {
+    title: "Innovation",
+    desc: "Modern AI systems designed for advanced legal reasoning.",
+    icon: Sparkles,
+  },
+  {
+    title: "Accuracy",
+    desc: "Every insight is structured for reliability and precision.",
+    icon: BadgeCheck,
   },
 ];

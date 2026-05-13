@@ -5,6 +5,7 @@ import NavBar from "../components/others/NavBar";
 import Footer from "../components/others/Footer";
 import Loader from "../components/others/Loader";
 import { Mail, Phone, MapPin, Send } from "lucide-react";
+import "../App.css";
 
 const Contact = () => {
   const navigate = useNavigate();
@@ -66,10 +67,10 @@ const Contact = () => {
       {showLoader && <Loader />}
 
       {!showLoader && (
-        <div className="min-h-screen overflow-hidden bg-linear-to-l from-slate-950 via-slate-900 to-slate-950 text-white font-[Inter]">
+        <div className="min-h-screen bg-linear-to-l from-slate-950 via-slate-900 to-slate-950 text-white font-[Inter]">
           <NavBar navigate={redirect} />
 
-          <main className="relative py-16 sm:py-20 lg:py-24 px-4 sm:px-6 lg:px-8">
+          <main className="relative z-10 py-16 sm:py-20 lg:py-24 px-4 sm:px-6 lg:px-8">
             <motion.div
               animate={{
                 scale: [1, 1.2, 1],

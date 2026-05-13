@@ -1,6 +1,7 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Navbar from "../components/others/NavBar";
 import Footer from "../components/others/Footer";
+import Loader from "../components/others/Loader";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import {
@@ -13,6 +14,7 @@ import {
   Calendar,
   Scale,
 } from "lucide-react";
+import "../App.css";
 
 const ProfileEdit = () => {
   const [showLoader, setLoader] = useState(false);
@@ -30,6 +32,8 @@ const ProfileEdit = () => {
     experience: "",
     fees: "",
   });
+  const token = localStorage.getItem("access_token");
+
 
   const handleChange = (e) => {
     setFormData({
@@ -48,11 +52,18 @@ const ProfileEdit = () => {
         !formData.gender &&
         !formData.dob &&
         !formData.role &&
-        !formData.address) ||
-      (!formData.speciality &&
+        !formData.address) 
+        ||
+      (!formData.name &&
+        !formData.email &&
+        !formData.phone_no &&
+        !formData.gender &&
+        !formData.dob &&
+        !formData.role &&
+        !formData.address &&
+        !formData.speciality &&
         !formData.experience &&
-        !formData.fees &&
-        !formData.password)
+        !formData.fees)
     ) {
       alert("please fill the details !");
       return;
@@ -61,21 +72,13 @@ const ProfileEdit = () => {
         await axios.put(
           "http://127.0.0.1:8000/api/auth/edit_profile/",
           formData,
+              {
+            headers: {
+              Authorization: `Bearer ${localStorage.getItem("access_token")}`,
+            },
+          },
         );
 
-        setFormData({
-          name: "",
-          email: "",
-          password: "",
-          phone_no: "",
-          gender: "",
-          dob: "",
-          role: "",
-          address: "",
-          speciality: "",
-          experience: "",
-          fees: "",
-        });
         alert("profile updated successfully !");
         return;
       } catch (error) {
@@ -85,6 +88,26 @@ const ProfileEdit = () => {
       }
     }
   };
+
+  const getProfile = async () => {
+    try {
+      const response = await axios.get(
+        "http://127.0.0.1:8000/api/auth/edit_profile/",
+         {
+            headers: {
+              Authorization: `Bearer ${localStorage.getItem("access_token")}`,
+            },
+          },
+      );
+      setFormData(response.data.user_data);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  useEffect(() => {
+    getProfile();
+  }, []);
 
   const redirect = (url) => {
     setLoader(true);
@@ -109,7 +132,7 @@ const ProfileEdit = () => {
               <h1 className="text-5xl font-bold">Edit Profile</h1>
 
               <p className="text-slate-400 mt-4 text-lg">
-                Manage your account information and lawyer details.
+                Manage your account information and {formData.role} details.
               </p>
             </div>
 
@@ -121,7 +144,7 @@ const ProfileEdit = () => {
 
                 <h2 className="text-2xl font-semibold mt-5"></h2>
 
-                <p className="text-slate-400">Lawyer Account</p>
+                <p className="text-slate-400">{formData.role} Account</p>
               </div>
 
               <form
@@ -214,6 +237,7 @@ const ProfileEdit = () => {
                     onChange={handleChange}
                     className="w-full px-5 py-3 rounded-2xl bg-slate-900 border border-white/10 text-white focus:outline-none focus:ring-2 focus:ring-amber-400"
                   >
+                    <option value="">Select Gender</option>
                     <option value="male">Male</option>
                     <option value="female">Female</option>
                   </select>
@@ -230,6 +254,7 @@ const ProfileEdit = () => {
                     onChange={handleChange}
                     className="w-full px-5 py-3 rounded-2xl bg-slate-900 border border-white/10 text-white focus:outline-none focus:ring-2 focus:ring-amber-400"
                   >
+                    <option value="">Select Role</option>
                     <option value="user">User</option>
                     <option value="lawyer">Lawyer</option>
                   </select>

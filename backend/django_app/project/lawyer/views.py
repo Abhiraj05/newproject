@@ -7,8 +7,6 @@ from rest_framework.response import Response
 # Create your views here.
 
 # fetches all the lawyers data and sends to frontend
-
-
 class FetchLawyers(APIView):
     permission_classes = [AllowAny]
 

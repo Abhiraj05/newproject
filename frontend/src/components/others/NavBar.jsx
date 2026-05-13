@@ -10,7 +10,10 @@ const Navbar = ({ navigate }) => {
 
   const logOut = () => {
     localStorage.removeItem("username");
+    localStorage.removeItem("conversation_id")
+    navigate("/")
     alert("logout successfully !")
+    return
   };
   return (
     <>
@@ -23,7 +26,7 @@ const Navbar = ({ navigate }) => {
           </a>
           <nav className="hidden md:flex gap-8 text-md text-slate-300">
             <a href="/">Home</a>
-            <a onClick={() => navigate("/chat")}>Chat</a>
+            {username && (<a onClick={() => navigate("/chat")}>Chat</a>)}
             <a onClick={() => navigate("/lawyers")}>Lawyers</a>
             <a onClick={() => navigate("/about")}>About</a>
             <a onClick={() => navigate("/contact")}>Contact</a>
@@ -78,12 +81,12 @@ const Navbar = ({ navigate }) => {
                 Home
               </a>
 
-              <a
+              {username && (<a
                 onClick={() => navigate("/chat")}
                 className="py-2 hover:text-amber-400 transition cursor-pointer"
               >
                 Chat
-              </a>
+              </a>)}
 
               <a
                 onClick={() => navigate("/lawyers")}
