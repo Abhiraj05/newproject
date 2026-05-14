@@ -237,6 +237,7 @@ class EditProfile(APIView):
                     return Response({"message": "profile not found !"}, status=status.HTTP_400_BAD_REQUEST)
                 else:
                     is_user.name = name
+                    is_user.username = email
                     is_user.email = email
                     is_user.gender = gender
                     is_user.dob = dob

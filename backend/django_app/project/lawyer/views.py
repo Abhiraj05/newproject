@@ -7,13 +7,11 @@ from rest_framework.response import Response
 # Create your views here.
 
 # fetches all the lawyers data and sends to frontend
-
-
 class FetchLawyers(APIView):
     permission_classes = [AllowAny]
 
     # fetches all the lawyers
-    def get(self, request):
+    def get(self, request, format=None):
         try:
             lawyers_list = LawyerProfile.objects.select_related("user").values(
                 "user__name",

@@ -32,10 +32,11 @@ const ChatBox = () => {
   const [isProcessing, setIsProcessing] = useState(false);
   const [loading, setLoading] = useState(false);
   const [line, setLine] = useState(false);
-  const [userData, setUserData] = useState("");
+  const [fileName, setFileName] = useState("");
   const navigate = useNavigate();
   const token = localStorage.getItem("access_token");
   const conversation_id = localStorage.getItem("conversation_id");
+  const file_obj_id = localStorage.getItem("file_obj_id");
   const username = localStorage.getItem("username");
 
   const handleChange = (e) => {
@@ -62,6 +63,7 @@ const ChatBox = () => {
       try {
         if (!conversation_id) {
           data.append("sender", formData.sender);
+          data.append("file_obj_id",file_obj_id)
         } else {
           data.append("sender", formData.sender);
           data.append("conversation_id", conversation_id);
@@ -139,6 +141,7 @@ const ChatBox = () => {
           ])
           .flat();
         setChatHistory(formattedMessages);
+        setFileName(response.data.file_name)
         setLoading(false);
       } catch (error) {
         console.log(error);
@@ -158,7 +161,6 @@ const ChatBox = () => {
           },
         },
       );
-      setUserData(response.data.user_data);
       setConversations(response.data.all_conversation_list);
     } catch (error) {
       console.log(error);
@@ -188,6 +190,7 @@ const ChatBox = () => {
           },
         );
         setIsProcessing(false);
+        localStorage.setItem("file_obj_id", response.data.file_obj_id);
         alert("document processed successfully !");
         return;
       } catch (error) {
@@ -199,8 +202,12 @@ const ChatBox = () => {
 
   const clearConversationId = () => {
     setFormData({ sender: "" });
+    setFileName("")
     localStorage.removeItem("conversation_id");
+    localStorage.removeItem("file_obj_id");
     setChatHistory([]);
+    showLoader(true)
+    redirect("/chat")
   };
 
   const redirect = (url) => {
@@ -249,6 +256,7 @@ const ChatBox = () => {
                   onClick={() => {
                     localStorage.setItem("conversation_id", chat.id);
                     fetchData(chat.id);
+                    setDocumentReady(true)
                   }}
                   whileHover={{
                     scale: 1.02,
@@ -260,12 +268,8 @@ const ChatBox = () => {
                   <div className="flex items-start justify-between gap-3">
                     <div>
                       <h2 className="text-white font-semibold text-lg line-clamp-1">
-                        Document {chat.id}
+                        {chat.document}
                       </h2>
-
-                      <p className="text-slate-400 text-sm mt-2 line-clamp-2">
-                        {chat.bot}
-                      </p>
                     </div>
 
                     <div className="w-3 h-3 rounded-full bg-amber-400 mt-2 opacity-0 group-hover:opacity-100 transition" />
@@ -432,23 +436,28 @@ const ChatBox = () => {
                         <Paperclip className="w-5 h-5 text-slate-950" />
 
                         <span className="text-sm text-slate-950">
-                          {textData.file ? textData.file.name : "Choose File"}
+                          {textData.file
+                            ? textData.file.name
+                            : fileName
+                              ? fileName.file.split("/").pop()
+                              : "Choose File"}
                         </span>
-                        <form onSubmit={handelFileSubmit}>
+                         {!fileName && (<>
+                         <form onSubmit={handelFileSubmit}>
                           <input
                             type="file"
                             name="file"
                             onChange={handleFileChange}
                             className="hidden"
                           />
-                          <motion.button
+                         <motion.button
                             type="submit"
                             whileHover={{ scale: 1.1 }}
                             className="bg-slate-950 text-gray-300 p-3 rounded-2xl"
                           >
                             <Upload className="w-4 h-4" />
                           </motion.button>
-                        </form>
+                        </form></>)}
                       </motion.label>
                       {line && (
                         <div className="mt-4">
