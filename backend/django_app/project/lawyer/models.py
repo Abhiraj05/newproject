@@ -4,7 +4,7 @@ from user.models import User
 # Create your models here.
 
 # lawyer profile model
-class LawyerProfile(User):
+class LawyerProfile(models.Model):
     user = models.OneToOneField(
         User,
         on_delete=models.CASCADE,

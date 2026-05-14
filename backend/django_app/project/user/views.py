@@ -245,17 +245,19 @@ class EditProfile(APIView):
                     is_user.address = address
                     is_user.save()
 
-                is_lawyer = LawyerProfile.objects.filter(
-                    user=request.user).first()
 
-                if is_lawyer is None and speciality is not None and fees is not None and experience is not None:
-                    LawyerProfile.objects.create(
-                        user=is_user, fees=fees, speciality=speciality, experience=experience)
-                else:
-                    is_lawyer.speciality = speciality
-                    is_lawyer.experience = experience
-                    is_lawyer.fees = fees
-                    is_lawyer.save()
+                if  speciality is not None and fees is not None and experience is not None:
+                    is_lawyer = LawyerProfile.objects.filter(
+                        user=request.user).first()
+
+                    if is_lawyer is None:
+                        LawyerProfile.objects.create(
+                            user=is_user, fees=fees, speciality=speciality, experience=experience)
+                    else:
+                        is_lawyer.speciality = speciality
+                        is_lawyer.experience = experience
+                        is_lawyer.fees = fees
+                        is_lawyer.save()
 
                 return Response({"message": "profile updated successfully !"}, status=status.HTTP_200_OK)
             except:
