@@ -35,6 +35,7 @@
 - MarkItDown for document parsing
 - RAG (Retrieval-Augmented Generation) for context-aware AI responses using uploaded documents.
 - Chroma Vector DB for semantic search
+- Semantic similarity search for retrieving the most relevant legal context before generating AI responses.
 
 
 ## Installation
