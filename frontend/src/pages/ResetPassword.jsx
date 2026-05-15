@@ -8,6 +8,11 @@ const ResetPassword = () => {
     password: "",
   });
   const [confirmPassword, setConfirmPassword] = useState("");
+  const [showPassword, setShowPassword] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+  const params = new URLSearchParams(window.location.search);
+  const uid = params.get("uid");
+  const token = params.get("token");
 
   const handleChange = (e) => {
     setFormData({
@@ -15,23 +20,28 @@ const ResetPassword = () => {
       [e.target.name]: e.target.value,
     });
   };
-
+  // send form data to backend
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    if (!formData.new_password && !confirmPassword) {
+    if (!formData.password || !confirmPassword) {
       alert("please fill the details !");
       return;
     }
-    if (formData.new_password !== confirmPassword) {
+    if (formData.password.length !== 8 || confirmPassword.length !== 8) {
+      alert("password length should be 8 character !");
+      return;
+    }
+    if (formData.password !== confirmPassword) {
       alert("password doesn't match !");
       return;
     } else {
       try {
-        await axios.post(
-          "http://127.0.0.1:8000/api/auth/reset_password/",
-          formData,
-        );
+        await axios.post("http://127.0.0.1:8000/api/auth/reset_password/", {
+          uid,
+          token,
+          password: formData.password,
+        });
 
         setFormData({
           password: "",
@@ -85,30 +95,46 @@ const ResetPassword = () => {
             initial={{ opacity: 0, x: -30 }}
             animate={{ opacity: 1, x: 0 }}
             transition={{ delay: 0.5 }}
+            className="relative"
           >
             <input
-              type="password"
+              type={showPassword ? "text" : "password"}
               name="password"
               value={formData.password}
               onChange={handleChange}
               placeholder="Enter your password"
               className="w-full px-5 py-3  rounded-2xl bg-slate-900 text-white placeholder-slate-400 border border-white/10 focus:outline-none focus:ring-2 focus:ring-amber-400"
             />
+            <button
+              type="button"
+              onClick={() => setShowPassword(!showPassword)}
+              className="absolute right-4 top-1/2 -translate-y-1/2 text-sm text-gray-400 font-sans"
+            >
+              {showPassword ? "Hide" : "Show"}
+            </button>
           </motion.div>
 
           <motion.div
             initial={{ opacity: 0, x: -30 }}
             animate={{ opacity: 1, x: 0 }}
             transition={{ delay: 0.7 }}
+            className="relative"
           >
             <input
-              type="password"
+              type={showConfirmPassword ? "text" : "password"}
               name="confirmPassword"
               value={confirmPassword}
               onChange={(e) => setConfirmPassword(e.target.value)}
               placeholder="Confirm your password"
               className="w-full px-5 py-3 mb-3 rounded-2xl bg-slate-900 text-white placeholder-slate-400 border border-white/10 focus:outline-none focus:ring-2 focus:ring-amber-400"
             />
+            <button
+              type="button"
+              onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+              className="absolute right-4 top-1/3 -translate-y-1/3 text-sm text-gray-400 font-sans"
+            >
+              {showConfirmPassword ? "Hide" : "Show"}
+            </button>
           </motion.div>
           <motion.button
             whileHover={{ scale: 1.03 }}

@@ -17,12 +17,12 @@ const ForgotPassword = () => {
       [e.target.name]: e.target.value,
     });
   };
-
+  // send form data to backend
   const handleSubmit = async (e) => {
     e.preventDefault();
 
     if (!formData.email) {
-      alert("Please the your email id");
+      alert("Please the your email id !");
       return;
     } else {
       try {

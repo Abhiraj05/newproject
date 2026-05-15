@@ -10,7 +10,7 @@ from common.email import send_email
 from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
 from django.utils.encoding import force_bytes
 from django.contrib.auth.tokens import PasswordResetTokenGenerator
-from user.serializers import UserProfileSerializer, ForgotPasswordSerializer, SetNewPasswordSerializer, UserRegisterSerializer, UserLoginSerializer
+from user.serializers import UserProfileSerializer, ForgotPasswordSerializer, UserRegisterSerializer, UserLoginSerializer
 
 
 # Create your views here.
@@ -84,7 +84,7 @@ class ForgotPassword(APIView):
     def post(self, request, format=None):
         serializer = ForgotPasswordSerializer(data=request.data)
         if serializer.is_valid():
-            reset_email = request.data.get("email")
+            reset_email = serializer.validated_data['email']
             try:
                 user = User.objects.filter(email=reset_email).first()
                 if not user:
@@ -100,14 +100,13 @@ class ForgotPassword(APIView):
 
                 You requested a password reset for your account. Click on the link below to set a new password:
 
-                http://localhost:5173/setnewpassword/?uid={uid}&token={token}
+                http://localhost:5173/resetpassword/?uid={uid}&token={token}
 
                 If you did not request this, please ignore this email.
 
                 Best regards,
                 legalnext Support Team
                 """
-
                 try:
                     send_email(request, default_email,
                                reset_email, message, mail_sub)
@@ -126,51 +125,48 @@ class SetNewPassword(APIView):
     permission_classes = [AllowAny]
 
     def post(self, request, format=None):
-        serializer = SetNewPasswordSerializer(data=request.data)
-        if serializer.is_valid():
-            uid = request.data.get('uid')
-            token = request.data.get('token')
-            new_password = request.data.get('password')
+        uid = request.data.get('uid')
+        token = request.data.get('token')
+        new_password = request.data.get('password')
+
+        try:
+            if not uid or not token or not new_password:
+                return Response({"message": "uid, token and new password are required !"}, status=status.HTTP_400_BAD_REQUEST)
 
             try:
-                if not uid or not token or not new_password:
-                    return Response({"message": "uid, token and new password are required !"}, status=status.HTTP_400_BAD_REQUEST)
-
-                try:
-                    user_id = urlsafe_base64_decode(uid).decode()
-                    user = User.objects.get(id=user_id)
-                except:
-                    return Response({"message": "invalid uid !"}, status=status.HTTP_400_BAD_REQUEST)
-
-                if PasswordResetTokenGenerator().check_token(user, token):
-                    user.set_password(new_password)
-                    user.save()
-
-                    default_email = "support@legalnext.com"
-                    mail_sub = "Your Password Has Been Changed"
-                    confirm_message = f"""
-                    Hello {user.username},
-
-                    This is a confirmation that the password for your account has been successfully changed.
-
-                    If you did not perform this action, please contact our support team immediately.
-
-                    Best regards,
-                    legalnext Support Team
-                    """
-                    try:
-                        send_email(request, default_email, user.email,
-                                   confirm_message, mail_sub)
-                    except Exception as e:
-                        print(f"confirmation email failed: {str(e)}")
-
-                    return Response({"message": "password reset successfully !"}, status=status.HTTP_200_OK)
-                else:
-                    return Response({"message": "invalid or expired token !"}, status=status.HTTP_400_BAD_REQUEST)
+                user_id = urlsafe_base64_decode(uid).decode()
+                user = User.objects.get(id=user_id)
             except:
-                return Response({"message": "invalid password !"}, status=status.HTTP_400_BAD_REQUEST)
-        else:
-            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+                return Response({"message": "invalid uid !"}, status=status.HTTP_400_BAD_REQUEST)
+
+            if PasswordResetTokenGenerator().check_token(user, token):
+                user.set_password(new_password)
+                user.save()
+
+                default_email = "support@legalnext.com"
+                mail_sub = "Your Password Has Been Changed"
+                confirm_message = f"""
+                Hello {user.username},
+
+                This is a confirmation that the password for your account has been successfully changed.
+
+                If you did not perform this action, please contact our support team immediately.
+
+                Best regards,
+                legalnext Support Team
+                    """
+                try:
+                    send_email(request, default_email, user.email,
+                                   confirm_message, mail_sub)
+                    return Response({"message": "password reset successfully !"}, status=status.HTTP_200_OK)  
+               
+                except Exception as e:
+                        print(f"confirmation email failed: {str(e)}")
+            else:
+                return Response({"message": "invalid or expired token !"}, status=status.HTTP_400_BAD_REQUEST)
+        except:
+            return Response({"message": "invalid password !"}, status=status.HTTP_400_BAD_REQUEST)
+ 
 
 
 # updates the user profile

@@ -13,6 +13,8 @@ const SignUp = () => {
   });
 
   const [confirmPassword, setConfirmPassword] = useState("");
+  const [showPassword, setShowPassword] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
 
   const handleChange = (e) => {
     setFormData({
@@ -20,16 +22,20 @@ const SignUp = () => {
       [e.target.name]: e.target.value,
     });
   };
-
+  // send form data to backend
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    if (!formData.email && !formData.password && !confirmPassword) {
+    if (!formData.email || !formData.password || !confirmPassword) {
       alert("please fill the details");
       return;
     }
     if (formData.password !== confirmPassword) {
       alert("password doesn't match !");
+      return;
+    }
+    if (formData.password.length !== 8 || confirmPassword.length !== 8) {
+      alert("password length should be 8 character !");
       return;
     } else {
       try {
@@ -121,30 +127,46 @@ const SignUp = () => {
               initial={{ opacity: 0, x: 30 }}
               animate={{ opacity: 1, x: 0 }}
               transition={{ delay: 0.6 }}
+              className="relative"
             >
               <input
-                type="password"
+                type={showPassword ? "text" : "password"}
                 name="password"
                 value={formData.password}
                 onChange={handleChange}
                 placeholder="Enter your password"
                 className="w-full px-5 py-3 rounded-2xl bg-slate-900 text-white placeholder-slate-400 border border-white/10 focus:outline-none focus:ring-2 focus:ring-amber-400"
               />
+              <button
+                type="button"
+                onClick={() => setShowPassword(!showPassword)}
+                className="absolute right-4 top-1/2 -translate-y-1/2 text-sm text-gray-400 font-sans"
+              >
+                {showPassword ? "Hide" : "Show"}
+              </button>
             </motion.div>
 
             <motion.div
               initial={{ opacity: 0, x: -30 }}
               animate={{ opacity: 1, x: 0 }}
               transition={{ delay: 0.7 }}
+              className="relative"
             >
               <input
-                type="password"
+                type={showConfirmPassword ? "text" : "password"}
                 name="confirmPassword"
                 value={confirmPassword}
                 onChange={(e) => setConfirmPassword(e.target.value)}
                 placeholder="Confirm your password"
                 className="w-full px-5 py-3 rounded-2xl bg-slate-900 text-white placeholder-slate-400 border border-white/10 focus:outline-none focus:ring-2 focus:ring-amber-400"
               />
+              <button
+                type="button"
+                onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+                className="absolute right-4 top-1/2 -translate-y-1/2 text-sm text-gray-400 font-sans"
+              >
+                {showConfirmPassword ? "Hide" : "Show"}
+              </button>
             </motion.div>
 
             <motion.button

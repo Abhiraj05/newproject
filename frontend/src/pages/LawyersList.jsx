@@ -21,15 +21,13 @@ const LawyersList = () => {
   useEffect(() => {
     fetchData();
   }, []);
-
+  // get's lawyers list
   const fetchData = async () => {
     try {
       const response = await axios.get(
         "http://127.0.0.1:8000/api/lawyer/get_lawyers/",
       );
       setDataList(response.data.lawyers_list);
-      console.log(response.data.lawyers_list);
-      // setDataList(data)
     } catch (error) {
       console.log(error);
     }
@@ -70,28 +68,6 @@ const LawyersList = () => {
               Access our network of trusted advocates for litigation,
               compliance, advisory and business law.
             </motion.p>
-
-            <motion.div
-              initial={{ opacity: 0, y: 50 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.3 }}
-              className="bg-white/5 border border-white/10 rounded-3xl p-5 flex flex-col md:flex-row gap-4"
-            >
-              <div className="relative flex-1">
-                <Search className="absolute left-4 top-4 w-5 h-5 text-slate-400" />
-                <input
-                  type="text"
-                  placeholder="Search by name, expertise..."
-                  className="w-full bg-slate-900 border border-white/10 rounded-2xl py-3 pl-12 pr-4 outline-none"
-                />
-              </div>
-
-              <GrayButton title="Filters">
-                <Filter className="w-4 h-4 mr-2" />
-              </GrayButton>
-
-              <YellowButton title="Search" />
-            </motion.div>
           </section>
 
           <section className="max-w-7xl mx-auto px-6 pb-20">
@@ -166,13 +142,15 @@ const LawyersList = () => {
                         </span>
                       </div>
                       <div className="flex gap-3">
-                        <YellowButton className="w-full" title="Contact" />
-
-                        <GrayButton title="Send Mail">
-                          <a href={`mailto:${item.user__email}`}>
+                        <a href={`tel:${item.user__phone_no}`}>
+                          <YellowButton title="Contact">
+                          </YellowButton>
+                        </a>
+                        <a href={`mailto:${item.user__email}`}>
+                          <GrayButton title="Send Mail">
                             <Mail className="w-4 h-4" />
-                          </a>
-                        </GrayButton>
+                          </GrayButton>
+                        </a>
                       </div>
                     </CardContent>
                   </Card>
@@ -180,33 +158,6 @@ const LawyersList = () => {
               ))}
             </div>
           </section>
-
-          {/* <section className="max-w-7xl mx-auto px-6 pb-24">
-            <motion.div
-              initial={{ opacity: 0, y: 60 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              className="rounded-3xl bg-linear-to-r from-amber-400 to-orange-500 p-10 text-black flex flex-col md:flex-row items-center justify-between gap-6"
-            >
-              <div>
-                <h2 className="text-3xl font-bold mb-2">
-                  Need custom recommendation?
-                </h2>
-
-                <p className="text-black/80">
-                  Our AI engine finds the best lawyer based on your case.
-                </p>
-              </div>
-
-              <motion.div whileHover={{ scale: 1.05 }}>
-                <YellowButton
-                  className="bg-black text-white hover:bg-slate-800"
-                  title="Start AI Match"
-                />
-              </motion.div>
-            </motion.div>
-          </section> */}
-
           <Footer />
         </div>
       )}

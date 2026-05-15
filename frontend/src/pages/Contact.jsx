@@ -5,6 +5,7 @@ import NavBar from "../components/others/NavBar";
 import Footer from "../components/others/Footer";
 import Loader from "../components/others/Loader";
 import { Mail, Phone, MapPin, Send } from "lucide-react";
+import axios from "axios"
 import "../App.css";
 
 const Contact = () => {
@@ -22,11 +23,11 @@ const Contact = () => {
       [e.target.name]: e.target.value,
     });
   };
-
+  // send form data to backend
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    if (!formData.name && !formData.email && !formData.message) {
+    if (!formData.name || !formData.email || !formData.message) {
       alert("please fill the details !");
       return;
     } else {
@@ -40,9 +41,6 @@ const Contact = () => {
           email: "",
           message: "",
         });
-
-        setConfirmPassword("");
-
         alert("feedback submitted successfully !");
         return;
       } catch (error) {

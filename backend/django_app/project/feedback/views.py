@@ -9,6 +9,7 @@ from common.email import send_email
 # sends the feedback email to the admin
 class UserFeedback(APIView):
     permission_classes = [AllowAny]
+    
     def post(self, request, format=None):
         user_name = request.data.get("name")
         user_email = request.data.get("email")
@@ -32,6 +33,6 @@ class UserFeedback(APIView):
         """
         try:
             send_email(request, user_email, default_email, message, mail_sub)
+            return Response({"message": "feedback form submitted via email."},status=status.HTTP_200_OK)
         except Exception as e:
             print(f"Reset email failed: {str(e)}")
-        return Response({"message": "feedback form submitted via email."},status=status.HTTP_202_ACCEPTED)

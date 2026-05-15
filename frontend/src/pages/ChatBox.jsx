@@ -52,11 +52,12 @@ const ChatBox = () => {
       setDocumentReady(true);
     }
   };
+  // send form data to backend
   const handleSubmit = async (e) => {
     e.preventDefault();
-
+    
     if (!formData.sender) {
-      alert("Please enter the message");
+      alert("Please enter the message !");
       return;
     } else {
       const data = new FormData();
@@ -108,7 +109,7 @@ const ChatBox = () => {
       }
     }
   };
-
+  // get's user chats history
   const fetchData = async (id = conversation_id) => {
     if (!id) {
       return;
@@ -150,7 +151,7 @@ const ChatBox = () => {
       }
     }
   };
-
+  // get's user conversations history
   const fetchConversations = async () => {
     try {
       const response = await axios.get(
@@ -166,7 +167,7 @@ const ChatBox = () => {
       console.log(error);
     }
   };
-
+  // send file data to backend
   const handelFileSubmit = async (e) => {
     e.preventDefault();
     if (!textData.file) {

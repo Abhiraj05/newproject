@@ -9,8 +9,6 @@ from services.vector_db.collections import get_collections
 from langchain_google_genai import GoogleGenerativeAIEmbeddings
 from schemas.request_schemas import DocumentText, QueryText
 
-
-
 app = FastAPI()
 
 origins = ["http://127.0.0.1:8000/"]

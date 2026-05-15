@@ -11,6 +11,7 @@ const SignIn = () => {
     email: "",
     password: "",
   });
+  const [showPassword, setShowPassword] = useState(false);
   const username = localStorage.getItem("username");
 
   const handleChange = (e) => {
@@ -19,12 +20,17 @@ const SignIn = () => {
       [e.target.name]: e.target.value,
     });
   };
-
+  
+  // send form data to backend
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    if (!formData.email && !formData.password) {
+    if (!formData.email || !formData.password) {
       alert("please fill the details !");
+      return;
+    }
+    if (formData.password.length !== 8) {
+      alert("password length should be 8 character !");
       return;
     } else {
       try {
@@ -32,7 +38,7 @@ const SignIn = () => {
           "http://127.0.0.1:8000/api/auth/login/",
           formData,
         );
-       
+
         localStorage.setItem("access_token", response.data.access);
         localStorage.setItem("refresh_token", response.data.refresh);
         localStorage.setItem("username", response.data.username);
@@ -124,15 +130,23 @@ const SignIn = () => {
               initial={{ opacity: 0, x: 30 }}
               animate={{ opacity: 1, x: 0 }}
               transition={{ delay: 0.6 }}
+              className="relative"
             >
               <input
-                type="password"
+                type={showPassword ? "text" : "password"}
                 name="password"
                 value={formData.password}
                 onChange={handleChange}
                 placeholder="Enter your password"
                 className="w-full px-5 py-3 rounded-2xl bg-slate-900 text-white placeholder-slate-400 border border-white/10 focus:outline-none focus:ring-2 focus:ring-amber-400"
               />
+              <button
+                type="button"
+                onClick={() => setShowPassword(!showPassword)}
+                className="absolute right-4 top-1/2 -translate-y-1/2 text-sm text-gray-400 font-sans"
+              >
+                {showPassword ? "Hide" : "Show"}
+              </button>
             </motion.div>
 
             <motion.div
