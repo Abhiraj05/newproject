@@ -33,6 +33,9 @@
 - Gemini LLM (gemini-3-flash-preview)
 - LangChain for prompt management
 - MarkItDown for document parsing
+- RAG (Retrieval-Augmented Generation) for context-aware AI responses using uploaded documents.
+- Chroma Vector DB for semantic search
+
 
 ## Installation
 
