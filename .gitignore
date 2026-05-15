@@ -9,4 +9,4 @@ node_modules/
 backend/.env
 fastapi_app/.env
 db/
-project/media
+media/
