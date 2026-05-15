@@ -49,7 +49,6 @@ const ChatBox = () => {
   const handleFileChange = (e) => {
     if (e.target.name === "file") {
       setTextData({ ...textData, file: e.target.files[0] });
-      setDocumentReady(true);
     }
   };
   // send form data to backend
@@ -191,6 +190,7 @@ const ChatBox = () => {
           },
         );
         setIsProcessing(false);
+        setDocumentReady(true);
         localStorage.setItem("file_obj_id", response.data.file_obj_id);
         alert("document processed successfully !");
         return;
