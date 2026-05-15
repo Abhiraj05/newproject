@@ -7,7 +7,7 @@ from rest_framework.views import APIView
 from rest_framework.response import Response
 from extractor.serializers import DocumentSerializer
 from rest_framework.permissions import IsAuthenticated
-
+from extractor.models import Files
 
 # Create your views here.
 
@@ -45,20 +45,22 @@ class ExtractFileText(APIView):
 
         if serializer.is_valid():
             file = request.FILES.get("file")
-   
+      
             try:
                 if file is None:
                     return Response({"message": "file upload failed !"},status=status.HTTP_400_BAD_REQUEST)
 
+                file_obj=Files.objects.create(user_id=request.user.id,file=file)
+         
                 extracted_text = self.extract_text(file)
            
                 if not extracted_text:
                     return Response({"message": "text extraction failed !"},status=status.HTTP_400_BAD_REQUEST)
                 
                 response=requests.post("http://127.0.0.1:8001/generate_embeddings",
-                                        json={"document_text": extracted_text})
+                                        json={"user_id":request.user.id,"file_id":file_obj.id,"document_text": extracted_text})
             
-                return Response(response.json(), status=status.HTTP_200_OK)
+                return Response({"embeddings":response.json(),"file_obj_id":file_obj.id}, status=status.HTTP_200_OK)
             except:
                 return Response({"message": "invalid file type !"}, status=status.HTTP_400_BAD_REQUEST)
         else:

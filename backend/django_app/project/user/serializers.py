@@ -18,24 +18,9 @@ class UserLoginSerializer(serializers.Serializer):
     password = serializers.CharField(write_only=True)
 
 
-class ForgotPasswordSerializer(serializers.ModelSerializer):
+class ForgotPasswordSerializer(serializers.Serializer):
+    email = serializers.EmailField(required=True)
 
-    class Meta:
-        model = User
-
-        fields = ['email']
-
-
-class SetNewPasswordSerializer(serializers.ModelSerializer):
-
-    class Meta:
-        model = User
-
-        fields = ['password']
-
-        extra_kwargs = {
-            'password': {'write_only': True}
-        }
 
 class UserProfileSerializer(serializers.ModelSerializer):
 

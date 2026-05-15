@@ -34,7 +34,7 @@ const ProfileEdit = () => {
   });
   const token = localStorage.getItem("access_token");
 
-
+  // send form data to backend
   const handleChange = (e) => {
     setFormData({
       ...formData,
@@ -88,7 +88,7 @@ const ProfileEdit = () => {
       }
     }
   };
-
+  // get's user profile data
   const getProfile = async () => {
     try {
       const response = await axios.get(

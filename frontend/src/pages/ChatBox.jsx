@@ -32,10 +32,11 @@ const ChatBox = () => {
   const [isProcessing, setIsProcessing] = useState(false);
   const [loading, setLoading] = useState(false);
   const [line, setLine] = useState(false);
-  const [userData, setUserData] = useState("");
+  const [fileName, setFileName] = useState("");
   const navigate = useNavigate();
   const token = localStorage.getItem("access_token");
   const conversation_id = localStorage.getItem("conversation_id");
+  const file_obj_id = localStorage.getItem("file_obj_id");
   const username = localStorage.getItem("username");
 
   const handleChange = (e) => {
@@ -48,20 +49,21 @@ const ChatBox = () => {
   const handleFileChange = (e) => {
     if (e.target.name === "file") {
       setTextData({ ...textData, file: e.target.files[0] });
-      setDocumentReady(true);
     }
   };
+  // send form data to backend
   const handleSubmit = async (e) => {
     e.preventDefault();
-
+    
     if (!formData.sender) {
-      alert("Please enter the message");
+      alert("Please enter the message !");
       return;
     } else {
       const data = new FormData();
       try {
         if (!conversation_id) {
           data.append("sender", formData.sender);
+          data.append("file_obj_id",file_obj_id)
         } else {
           data.append("sender", formData.sender);
           data.append("conversation_id", conversation_id);
@@ -106,7 +108,7 @@ const ChatBox = () => {
       }
     }
   };
-
+  // get's user chats history
   const fetchData = async (id = conversation_id) => {
     if (!id) {
       return;
@@ -139,6 +141,7 @@ const ChatBox = () => {
           ])
           .flat();
         setChatHistory(formattedMessages);
+        setFileName(response.data.file_name)
         setLoading(false);
       } catch (error) {
         console.log(error);
@@ -147,7 +150,7 @@ const ChatBox = () => {
       }
     }
   };
-
+  // get's user conversations history
   const fetchConversations = async () => {
     try {
       const response = await axios.get(
@@ -158,13 +161,12 @@ const ChatBox = () => {
           },
         },
       );
-      setUserData(response.data.user_data);
       setConversations(response.data.all_conversation_list);
     } catch (error) {
       console.log(error);
     }
   };
-
+  // send file data to backend
   const handelFileSubmit = async (e) => {
     e.preventDefault();
     if (!textData.file) {
@@ -188,6 +190,8 @@ const ChatBox = () => {
           },
         );
         setIsProcessing(false);
+        setDocumentReady(true);
+        localStorage.setItem("file_obj_id", response.data.file_obj_id);
         alert("document processed successfully !");
         return;
       } catch (error) {
@@ -199,8 +203,12 @@ const ChatBox = () => {
 
   const clearConversationId = () => {
     setFormData({ sender: "" });
+    setFileName("")
     localStorage.removeItem("conversation_id");
+    localStorage.removeItem("file_obj_id");
     setChatHistory([]);
+    showLoader(true)
+    redirect("/chat")
   };
 
   const redirect = (url) => {
@@ -249,6 +257,7 @@ const ChatBox = () => {
                   onClick={() => {
                     localStorage.setItem("conversation_id", chat.id);
                     fetchData(chat.id);
+                    setDocumentReady(true)
                   }}
                   whileHover={{
                     scale: 1.02,
@@ -260,12 +269,8 @@ const ChatBox = () => {
                   <div className="flex items-start justify-between gap-3">
                     <div>
                       <h2 className="text-white font-semibold text-lg line-clamp-1">
-                        Document {chat.id}
+                        {chat.document}
                       </h2>
-
-                      <p className="text-slate-400 text-sm mt-2 line-clamp-2">
-                        {chat.bot}
-                      </p>
                     </div>
 
                     <div className="w-3 h-3 rounded-full bg-amber-400 mt-2 opacity-0 group-hover:opacity-100 transition" />
@@ -432,23 +437,28 @@ const ChatBox = () => {
                         <Paperclip className="w-5 h-5 text-slate-950" />
 
                         <span className="text-sm text-slate-950">
-                          {textData.file ? textData.file.name : "Choose File"}
+                          {textData.file
+                            ? textData.file.name
+                            : fileName
+                              ? fileName.file.split("/").pop()
+                              : "Choose File"}
                         </span>
-                        <form onSubmit={handelFileSubmit}>
+                         {!fileName && (<>
+                         <form onSubmit={handelFileSubmit}>
                           <input
                             type="file"
                             name="file"
                             onChange={handleFileChange}
                             className="hidden"
                           />
-                          <motion.button
+                         <motion.button
                             type="submit"
                             whileHover={{ scale: 1.1 }}
                             className="bg-slate-950 text-gray-300 p-3 rounded-2xl"
                           >
                             <Upload className="w-4 h-4" />
                           </motion.button>
-                        </form>
+                        </form></>)}
                       </motion.label>
                       {line && (
                         <div className="mt-4">
